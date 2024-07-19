@@ -214,7 +214,8 @@ const EcommerceAddProduct = (props: any) => {
       facebook:"",
       instagram:"",
       city:"",
-      mangerEmail:""
+      mangerEmail:"",
+      TablesNumber:"",
     },
     validationSchema: Yup.object({
       //to enable later

@@ -171,12 +171,12 @@ const EcommerceOrders = () => {
   };
 
   useEffect(() => {
-    setOrderList(orders);
-  }, [orders]);
+    setCompaniesList(companies);
+  }, [companies]);
 
   useEffect(() => {
-    if (!isEmpty(orders)) setOrderList(orders);
-  }, [orders]);
+    if (!isEmpty(companies)) setCompaniesList(companies);
+  }, [companies]);
 
   const toggleTab = (tab: any, type: any) => {
     if (activeTab !== tab) {
@@ -248,15 +248,15 @@ const EcommerceOrders = () => {
 
 
   useEffect(() => {
-    setOrder(orders);
-  }, [orders]);
+    setOrder(companies);
+  }, [companies]);
 
   useEffect(() => {
-    if (!isEmpty(orders)) {
-      setOrder(orders);
+    if (!isEmpty(companies)) {
+      setOrder(companies);
       setIsEdit(false);
     }
-  }, [orders]);
+  }, [companies]);
 
 
   const toggle = useCallback(() => {
@@ -339,25 +339,25 @@ const EcommerceOrders = () => {
       },
       {
         header: "Order Id",
-        accessorKey: "orderId",
+        accessorKey: "_id",
         enableColumnFilter: false,
         cell: (cell: any) => {
           return <Link to="/apps-ecommerce-order-details" className="fw-medium link-primary">{cell.getValue()}</Link>;
         },
       },
       {
-        header: "Customer",
-        accessorKey: "customer",
+        header: "company",
+        accessorKey: "name",
         enableColumnFilter: false,
       },
       {
-        header: "Product",
-        accessorKey: "product",
+        header: "manager",
+        accessorKey: "manager",
         enableColumnFilter: false,
       },
       {
-        header: "Order Date",
-        accessorKey: "orderDate",
+        header: "createdAt",
+        accessorKey: "createdAt",
         enableColumnFilter: false,
         cell: (cell: any) => (
           <>
@@ -367,25 +367,25 @@ const EcommerceOrders = () => {
         ),
       },
       {
-        header: "Amount",
-        accessorKey: "amount",
+        header: "description",
+        accessorKey: "description",
         enableColumnFilter: false,
       },
       {
-        header: "Payment Method",
-        accessorKey: "payment",
+        header: "phone",
+        accessorKey: "phone",
         enableColumnFilter: false,
       },
       {
-        header: 'Delivery Status',
-        accessorKey: 'status',
+        header: 'is Paid',
+        accessorKey: 'isPaid',
         enableColumnFilter: false,
         cell: (cell: any) => {
           switch (cell.getValue()) {
-            case "Pending":
-              return <span className="badge text-uppercase bg-warning-subtle text-warning"> {cell.getValue()} </span>;
-            case "Cancelled":
-              return <span className="badge text-uppercase bg-danger-subtle text-danger"> {cell.getValue()} </span>;
+            case true:
+              return <span className="badge text-uppercase bg-success-subtle text-success"> Paid </span>;
+            case false:
+              return <span className="badge text-uppercase bg-danger-subtle text-danger">Not Paid</span>;
             case "Inprogress":
               return <span className="badge text-uppercase bg-secondary-subtle text-secondary"> {cell.getValue()} </span>;
             case "Pickups":
@@ -474,7 +474,7 @@ const EcommerceOrders = () => {
       <ExportCSVModal
         show={isExportCSV}
         onCloseClick={() => setIsExportCSV(false)}
-        data={orders}
+        data={companies}
       />
       <DeleteModal
         show={deleteModal}
@@ -600,10 +600,10 @@ const EcommerceOrders = () => {
                     </NavItem>
                   </Nav>
 
-                  {isOrderSuccess && orderList.length ? (
+                  {companies.length ? (
                     <TableContainer
                       columns={columns}
-                      data={(orderList || [])}
+                      data={(companies || [])}
                       isGlobalFilter={true}
                       customPageSize={8}
                       divClass="table-responsive table-card mb-1 mt-0"
