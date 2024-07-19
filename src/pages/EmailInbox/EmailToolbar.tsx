@@ -1177,16 +1177,7 @@ const EmailToolbar = () => {
                             <Input type="text" className="form-control" placeholder="Subject" />
                         </div>
                         <div className="ck-editor-reverse">
-                            <CKEditor
-                                editor={ClassicEditor}
-                                onReady={(editor) => {
-                                    // You can store the "editor" and use when it is needed.
-
-                                }}
-                                onChange={(event, editor) => {
-                                    editor.getData();
-                                }}
-                            />
+                         
                         </div>
                     </div>
                 </ModalBody>

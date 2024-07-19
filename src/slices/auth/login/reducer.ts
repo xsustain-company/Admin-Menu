@@ -16,8 +16,10 @@ const loginSlice = createSlice({
       state.loading = true;
     },
     apiError(state:any, action:any) {
-      state.errorMsg = action.payload.data;
-      state.error = action.payload.data;
+      console.log(action);
+      
+      state.errorMsg = action.payload.messages;
+      state.error = action.payload.messages;
       state.loading = true;
       state.isUserLogout = false;
     },

@@ -1,4 +1,5 @@
 import React from 'react';
+// import react querry
 
 //import Scss
 import './assets/scss/themes.scss';
@@ -30,6 +31,7 @@ fakeBackend();
 // initFirebaseBackend(firebaseConfig);
 
 function App() {
+
   return (
     <React.Fragment>
       <Route />

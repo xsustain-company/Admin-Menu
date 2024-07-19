@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import config from "../config";
+import customAxios from "./customAxios/axios";
 
 const { api } = config;
 
@@ -79,7 +80,15 @@ class APIClient {
   create = (url:string, data:any) => {
     return axios.post(url, data);
   };
-  /**
+   createWithImage = (url :string, data:any) => {
+    
+    return customAxios.post(url, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+  };
+    /**
    * Updates data
    */
   update = (url:string, data:any) => {

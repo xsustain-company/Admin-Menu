@@ -29,7 +29,7 @@ const Section = (props:any) => {
                                         </div>
                                     </div>
                                     <div className="col-auto">
-                                        <button type="button" className="btn btn-soft-secondary"><i className="ri-add-circle-line align-middle me-1"></i> Add Product</button>
+                                        <button type="button" className="btn btn-soft-secondary"><i className="ri-add-circle-line align-middle me-1"></i> Add Company</button>
                                     </div>
                                     <div className="col-auto">
                                         <button type="button" className="btn btn-soft-info btn-icon waves-effect waves-light layout-rightside-btn" onClick={props.rightClickBtn} ><i className="ri-pulse-line"></i></button>

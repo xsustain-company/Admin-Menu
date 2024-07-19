@@ -1,8 +1,13 @@
 //REGISTER
 export const POST_FAKE_REGISTER = "/auth/signup";
+// add company 
+export const ADD_NEW_COMPANY = "/company/create";
+export const GET_COMPANIES = "/company/listAll";
+
+//
 
 //LOGIN
-export const POST_FAKE_LOGIN = "/auth/signin";
+export const POST_FAKE_LOGIN = "/auth/admin/login";
 export const POST_FAKE_JWT_LOGIN = "/post-jwt-login";
 export const POST_FAKE_PASSWORD_FORGET = "/auth/forgot-password";
 export const POST_FAKE_JWT_PASSWORD_FORGET = "/jwt-forget-pwd";
@@ -39,7 +44,7 @@ export const TRASH_MAIL = "/trash/mail";
 // Product
 export const GET_PRODUCTS = "/apps/product";
 export const DELETE_PRODUCT = "/apps/product";
-export const ADD_NEW_PRODUCT = "/apps/product";
+export const ADD_NEW_PRODUCT = "/review/create";
 export const UPDATE_PRODUCT = "/apps/product";
 
 // Orders
@@ -80,7 +85,6 @@ export const UPDATE_CONTACT = "/apps/contact";
 export const DELETE_CONTACT = "/apps/contact";
 
 // Companies
-export const GET_COMPANIES = "/apps/company";
 export const ADD_NEW_COMPANIES = "/apps/company";
 export const UPDATE_COMPANIES = "/apps/company";
 export const DELETE_COMPANIES = "/apps/company";

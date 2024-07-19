@@ -24,11 +24,20 @@ const handleValidTime = (time:any) => {
 const Rating = (cell:any) => {
   return (
     <React.Fragment>
-      <span>
+      {cell.getValue() == true ? (<>
+      
+        <span>
         <span className="badge bg-light text-body fs-12 fw-medium">
           <i className="mdi mdi-star text-warning me-1"></i>{cell.getValue()}
         </span>
-      </span>
+      </span></>):(<>
+      
+        <span>
+        <span className="badge bg-light text-body fs-12 fw-medium">
+        </span>
+      </span></>)
+
+      }
     </React.Fragment>
   );
 };
@@ -51,5 +60,6 @@ const Price = (cell:any) => {
     </React.Fragment>
   );
 };
+
 
 export { Rating, Published, Price };

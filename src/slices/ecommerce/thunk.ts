@@ -16,7 +16,9 @@ import {
   updateCustomer as updateCustomerApi,
   deleteCustomer as deleteCustomerApi,
   addNewProduct as addNewProductApi,
-  updateProduct as updateProductApi
+  updateProduct as updateProductApi,
+  addNewCompanyApi,
+  getCompanies
 } from "../../helpers/fakebackend_helper";
 
 export const getProducts = createAsyncThunk("ecommerce/getProducts", async () => {
@@ -27,6 +29,8 @@ export const getProducts = createAsyncThunk("ecommerce/getProducts", async () =>
     return error;
   }
 });
+//--------------------------------
+//--------------------------------
 
 export const getOrders = createAsyncThunk("ecommerce/getOrders", async () => {
   try {
@@ -89,6 +93,18 @@ export const addNewProduct = createAsyncThunk("ecommerce/addNewProduct", async (
     return error;
   }
 });
+export const addNewCompany = createAsyncThunk("ecommerce/addNewCompany", async (company:any) => {
+  try {
+    const response = addNewCompanyApi(company);
+    const data = await response;
+    toast.success("Company Added Successfully", { autoClose: 3000 });
+    return data;
+  } catch (error) {
+    toast.error("Company Added Failed", { autoClose: 3000 });
+    return error;
+  }
+});
+
 
 export const updateProduct = createAsyncThunk("ecommerce/updateProduct", async (product:any) => {
   try {

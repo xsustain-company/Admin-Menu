@@ -21,7 +21,7 @@ const ProfileDropdown = () => {
         const authUSer : any = sessionStorage.getItem("authUser");
         if (authUSer) {
             const obj : any = JSON.parse(authUSer);
-            setUserName(process.env.REACT_APP_DEFAULTAUTH === "fake" ? obj.username === undefined ? user.first_name ? user.first_name : obj.data.first_name : "Admin" || "Admin" :
+            setUserName(process.env.REACT_APP_DEFAULTAUTH === "fake" ? obj.username === undefined ? user?.first_name ? user?.first_name : obj.data?.first_name : "Admin" || "Admin" :
                 process.env.REACT_APP_DEFAULTAUTH === "firebase" ? obj.email && obj.email : "Admin"
             );
         }

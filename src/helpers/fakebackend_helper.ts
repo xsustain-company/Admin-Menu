@@ -1,4 +1,5 @@
 import { APIClient } from "./api_helper";
+import customAxios from "./customAxios/axios";
 
 import * as url from "./url_helper";
 
@@ -54,6 +55,27 @@ export const postJwtRegister = (url: string, data: any) => {
       throw message;
     });
 };
+
+
+// used apis 
+/* *************************
+
+
+
+
+*/
+export const addNewCompanyApi = (company : any) => api.createWithImage(url.ADD_NEW_COMPANY, company); //, product
+
+export const getCompanies = async () => {
+  
+  
+let response =  await  customAxios.get(url.GET_COMPANIES)
+console.log(response);
+
+return response
+
+};
+
 
 // Login Method
 export const postJwtLogin = (data: any) => api.create(url.POST_FAKE_JWT_LOGIN, data);
@@ -127,6 +149,8 @@ export const deleteProducts = (product : any) => api.delete(url.DELETE_PRODUCT, 
 
 // add Products
 export const addNewProduct = (product : any) => api.create(url.ADD_NEW_PRODUCT, product); //, product
+
+// add 
 // update Products
 export const updateProduct = (product : any) => api.update(url.UPDATE_PRODUCT, product ); // + '/' + product._id, product
 
@@ -194,7 +218,6 @@ export const updateContact = (contact : any) => api.update(url.UPDATE_CONTACT , 
 export const deleteContact = (contact : any) => api.delete(url.DELETE_CONTACT , { headers: { contact } });
 
 // get Companies
-export const getCompanies = () => api.get(url.GET_COMPANIES);
 
 // add Companies
 export const addNewCompanies = (company : any) => api.create(url.ADD_NEW_COMPANIES, company);

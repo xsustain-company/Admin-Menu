@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BreadCrumb from "../../../Components/Common/BreadCrumb";
 import {
   Card,
@@ -20,7 +20,8 @@ import {
 
 // Redux
 import { useDispatch } from "react-redux";
-import { addNewProduct as onAddNewProduct } from "../../../slices/thunks";
+import { addNewCompany, addNewProduct as onAddNewProduct } from "../../../slices/thunks";
+import makeAnimated from "react-select/animated";
 
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
@@ -45,128 +46,158 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
-const EcommerceAddProduct = (props:any) => {
-  document.title = "Create Product | Velzon - React Admin & Dashboard Template";
+const EcommerceAddProduct = (props: any) => {
+  document.title = "Create Product ";
 
   const history = useNavigate();
-  const dispatch:any = useDispatch();
+  const dispatch: any = useDispatch();
 
-  const [customActiveTab, setcustomActiveTab] = useState<any>("1");
-  const toggleCustom = (tab:any) => {
-    if (customActiveTab !== tab) {
-      setcustomActiveTab(tab);
-    }
-  };
-  const [selectedFiles, setselectedFiles] = useState<any>([]);
-  const [selectedVisibility, setselectedVisibility] = useState<any>(null);
-
-
-  function handleAcceptedFiles(files:any) {
-    files.map((file:any) =>
-      Object.assign(file, {
-        preview: URL.createObjectURL(file),
-        formattedSize: formatBytes(file.size),
-      })
-    );
-    setselectedFiles(files);
-  }
-
-
-  function handleSelectVisibility(selectedVisibility:any) {
-    setselectedVisibility(selectedVisibility);
-  }
-
-  /**
-   * Formats the size
-   */
-  function formatBytes(bytes:any, decimals = 2) {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const dm = decimals < 0 ? 0 : decimals;
-    const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
-  }
-
-  const productCategory = [
-    {
-      options: [
-        { label: "All", value: "All" },
-        { label: "Appliances", value: "Kitchen Storage & Containers" },
-        { label: "Fashion", value: "Clothes" },
-        { label: "Electronics", value: "Electronics" },
-        { label: "Grocery", value: "Grocery" },
-        { label: "Home & Furniture", value: "Furniture" },
-        { label: "Kids", value: "Kids" },
-        { label: "Mobiles", value: "Mobiles" },
-      ],
-    },
-  ];
+  const [selectedMulti3, setselectedMulti3] = useState<any>(null);
+  const [selectedMulti4, setselectedMulti4] = useState<any>(null);
 
   const dateFormat = () => {
     let d = new Date(),
-      months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    let h = (d.getHours() % 12) || 12;
+      months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+    let h = d.getHours() % 12 || 12;
     let ampm = d.getHours() < 12 ? "AM" : "PM";
-    return ((d.getDate() + ' ' + months[d.getMonth()] + ', ' + d.getFullYear() + ", " + h + ":" + d.getMinutes() + " " + ampm).toString());
+    return (
+      d.getDate() +
+      " " +
+      months[d.getMonth()] +
+      ", " +
+      d.getFullYear() +
+      ", " +
+      h +
+      ":" +
+      d.getMinutes() +
+      " " +
+      ampm
+    ).toString();
   };
 
   const [date, setDate] = useState<any>(dateFormat());
 
-  const dateformate = (e:any) => {
-    const dateString = e.toString().split(" ");
-    let time = dateString[4];
-    let H = +time.substr(0, 2);
-    let h:any = (H % 12) || 12;
-    h = (h <= 9) ? h = ("0" + h) : h;
-    let ampm = H < 12 ? "AM" : "PM";
-    time = h + time.substr(2, 3) + " " + ampm;
+  const categories = [
+    {
+      label: "Restaurant",
+      options: [
+        { label: "sandwich", value: "sandwich" },
+        { label: "mlewoi", value: "mlewoi" },
+      ],
+    },
+    {
+      label: "kahwa",
+      options: [
+        { label: "express", value: "express" },
+        { label: "jus", value: "jus" },
+      ],
+    },
+  ];
+  const menues = [
+    {
+      label: "Restaurant",
+      options: [
+        { label: "Menu 1", value: "Menu 1" },
+        { label: "Menu 2", value: "Menu 2" },
+      ],
+    },
+    {
+      label: "kahwa",
+      options: [
+        { label: "Menu 1", value: "Menu 1" },
+        { label: "Menu 2", value: "Menu 2" },
+      ],
+    },
+  ];
+  const animatedComponents = makeAnimated();
 
-    const date = dateString[2] + " " + dateString[1] + ", " + dateString[3];
-    const orderDate = (date + ", " + time).toString();
-    setDate(orderDate);
+  const country = [
+    {
+      options: [{ label: "Tunisia", value: "tunisia" }],
+    },
+  ];
+  const tunisiaCities = [
+    {
+      options: [
+        { label: "Tunis", value: "Tunis" },
+        { label: "Sfax", value: "Sfax" },
+        { label: "Sousse", value: "Sousse" },
+        { label: "Kairouan", value: "Kairouan" },
+        { label: "Bizerte", value: "Bizerte" },
+        { label: "Gabès", value: "Gabes" },
+        { label: "Ariana", value: "Ariana" },
+        { label: "Gafsa", value: "Gafsa" },
+        { label: "Monastir", value: "Monastir" },
+        { label: "Ben Arous", value: "Ben Arous" },
+        { label: "Kasserine", value: "Kasserine" },
+        { label: "Tataouine", value: "Tataouine" },
+        { label: "Medenine", value: "Medenine" },
+        { label: "Nabeul", value: "Nabeul" },
+        { label: "Beja", value: "Beja" },
+        { label: "Jendouba", value: "Jendouba" },
+        { label: "Kebili", value: "Kebili" },
+        { label: "Siliana", value: "Siliana" },
+        { label: "Tozeur", value: "Tozeur" },
+        { label: "Mahdia", value: "Mahdia" },
+        { label: "Zaghouan", value: "Zaghouan" },
+      ],
+    },
+  ];
+
+  function handleMulti3(selectedMulti3: any) {
+    setselectedMulti3(selectedMulti3);
+  }
+  function handleMulti4(selectedMulti4: any) {
+    setselectedMulti4(selectedMulti4);
+  }
+  const base64ToFile = (base64String: any, filename: any) => {
+    const arr = base64String.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
   };
 
-  const productStatus = [
-    {
-      options: [
-        { label: "Draft", value: "draft" },
-        { label: "Published", value: "published" },
-        { label: "Scheduled", value: "scheduled" },
-      ],
-    },
-  ];
+  // image
+  const [selectedImage, setSelectedImage] = useState<any>();
 
-  const productVisibility = [
-    {
-      options: [
-        { label: "Hidden", value: "Hidden" },
-        { label: "Public", value: "Public" },
-      ],
-    },
-  ];
-
-    // image
-    const [selectedImage, setSelectedImage] = useState<any>();
-
-    const handleImageChange = (event: any) => {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        validation.setFieldValue('image', e.target.result);
-        setSelectedImage(e.target.result);
-      };
-      reader.readAsDataURL(file);
+  const handleImageChange = (event: any) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      validation.setFieldValue("image", e.target.result);
+      setSelectedImage(e.target.result);
     };
+    reader.readAsDataURL(file);
+  };
 
-  const validation:any = useFormik({
+  const validation: any = useFormik({
     enableReinitialize: true,
 
     initialValues: {
       name: "",
       price: "",
+      phone:"",
+      subdomain: "",
       stock: "",
+      email:"",
       orders: "",
       category: "",
       publishedDate: "",
@@ -176,10 +207,18 @@ const EcommerceAddProduct = (props:any) => {
       manufacturer_brand: "",
       product_discount: "",
       product_tags: "",
-      image: ""
+      logo: "",
+      Street: "",
+      zip: "",
+      description: "",
+      facebook:"",
+      instagram:"",
+      city:"",
+      mangerEmail:""
     },
     validationSchema: Yup.object({
-      name: Yup.string().required("Please Enter a Product Title"),
+      //to enable later
+      /*name: Yup.string().required("Please Enter a Product Title"),
       price: Yup.string().required("Please Enter a Product Price"),
       stock: Yup.string().required("Please Enter a Product stock"),
       orders: Yup.string().required("Please Enter a Product orders"),
@@ -189,26 +228,61 @@ const EcommerceAddProduct = (props:any) => {
       manufacturer_brand: Yup.string().required("Please Enter a Manufacturer Brand"),
       product_discount: Yup.string().required("Please Enter a Product Discount"),
       product_tags: Yup.string().required("Please Enter a Product Tags"),
-      image:Yup.string().required("Please add an image")
+      logo:Yup.string().required("Please add an logo")*/
     }),
+
     onSubmit: (values) => {
-      const newProduct = {
-        id: (Math.floor(Math.random() * (30 - 20)) + 20).toString(),
+      const formData = new FormData();
+      const imageFile = base64ToFile(selectedImage, "logo.png");
+      console.log(imageFile);
+
+      formData.append("logo", imageFile);
+
+      console.log(values);
+
+  /*    const newProduct = {
         name: values.name,
+        description: values.description,
+        subdomain: values.subdomain,
+        address: {
+          street: values.Street,
+          city: "",
+          zip: values.zip,
+          country: "Tunisia",
+        },
+        socialMedia:{
+          facebook:values.facebook,
+          instagram: values.instagram
+        },
         price: values.price,
         stock: values.stock,
         orders: values.orders,
-        category: values.category,
         publishedDate: date,
         status: values.status,
         rating: 4.5,
-        image: selectedImage
-      };
+        // logo: selectedImage
+      };*/
+      formData.append("name", values.name);
+      formData.append("phone", values.phone);
+      formData.append("email", values.email);
+
+      formData.append("description", values.description);
+      formData.append("subdomain", values.subdomain);
+      formData.append("address[street]", values.Street);
+      formData.append("address[city]", values.city); // Assuming city is empty for now
+      formData.append("address[zip]", values.zip);
+      formData.append("address[country]", "Tunisia");
+      formData.append("socialMedia[facebook]", values.facebook);
+      formData.append("socialMedia[instagram]", values.instagram);
+      formData.append("price", values.price);
+      formData.append("mangerEmail", values.mangerEmail);
+
+      
       // save new product
-      dispatch(onAddNewProduct(newProduct));
+      dispatch(addNewCompany(formData));
       history("/apps-ecommerce-products");
       validation.resetForm();
-    }
+    },
   });
   return (
     <div className="page-content">
@@ -222,354 +296,245 @@ const EcommerceAddProduct = (props:any) => {
                 e.preventDefault();
                 validation.handleSubmit();
                 return false;
-              }}>
+              }}
+            >
               <Card>
                 <CardBody>
                   <div className="mb-3">
                     <Label className="form-label" htmlFor="product-title-input">
-                      Product Title
+                      Company Name
                     </Label>
                     <Input
                       type="text"
                       className="form-control"
                       id="product-title-input"
-                      placeholder="Enter product title"
+                      placeholder="Enter Company Name"
                       name="name"
                       value={validation.values.name || ""}
                       onBlur={validation.handleBlur}
                       onChange={validation.handleChange}
-                      invalid={validation.errors.name && validation.touched.name ? true : false}
+                      invalid={
+                        validation.errors.name && validation.touched.name
+                          ? true
+                          : false
+                      }
                     />
                     {validation.errors.name && validation.touched.name ? (
-                      <FormFeedback type="invalid">{validation.errors.name}</FormFeedback>
+                      <FormFeedback type="invalid">
+                        {validation.errors.name}
+                      </FormFeedback>
                     ) : null}
                   </div>
-                  <div>
-                    <Label>Product Description</Label>
-
-                    <CKEditor
-                      editor={ClassicEditor}
-                      data="<p>
-                      Tommy Hilfiger men striped pink sweatshirt. Crafted with
-                      cotton. Material composition is 100% organic cotton.
-                      This is one of the world’s leading designer lifestyle
-                      brands and is internationally recognized for celebrating
-                      the essence of classic American cool style, featuring
-                      preppy with a twist designs.
-                    </p>
-                    <ul>
-                      <li>Full Sleeve</li>
-                      <li>Cotton</li>
-                      <li>All Sizes available</li>
-                      <li>4 Different Color</li>
-                    </ul>"
-                      onReady={(editor) => {
-                        // You can store the "editor" and use when it is needed.
-                      }}
+                  <div className="mb-3">
+                    <Label className="form-label" htmlFor="product-title-input">
+                      Subdomain
+                    </Label>
+                    <Input
+                      type="text"
+                      className="form-control"
+                      id="product-title-input"
+                      placeholder="Enter subdomain"
+                      name="subdomain"
+                      value={validation.values.subdomain || ""}
+                      onBlur={validation.handleBlur}
+                      onChange={validation.handleChange}
+                      invalid={
+                        validation.errors.subdomain &&
+                        validation.touched.subdomain
+                          ? true
+                          : false
+                      }
                     />
+                    {validation.errors.subdomain &&
+                    validation.touched.subdomain ? (
+                      <FormFeedback type="invalid">
+                        {validation.errors.subdomain}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                  <div className="mb-3">
+                    <Label className="form-label" htmlFor="product-title-input">
+                      Phone
+                    </Label>
+                    <Input
+                      type="text"
+                      className="form-control"
+                      id="Phone"
+                      placeholder="Enter Phone number"
+                      name="phone"
+                      value={validation.values.phone || ""}
+                      onBlur={validation.handleBlur}
+                      onChange={validation.handleChange}
+                      invalid={
+                        validation.errors.phone && validation.touched.phone
+                          ? true
+                          : false
+                      }
+                    />
+                    {validation.errors.phone && validation.touched.phone ? (
+                      <FormFeedback type="invalid">
+                        {validation.errors.phone}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                  <div className="mb-3">
+                    <Label className="form-label" htmlFor="product-title-input">
+                      email
+                    </Label>
+                    <Input
+                      type="email"
+                      className="form-control"
+                      id="email"
+                      placeholder="Enter company email"
+                      name="email"
+                      value={validation.values.email || ""}
+                      onBlur={validation.handleBlur}
+                      onChange={validation.handleChange}
+                      invalid={
+                        validation.errors.email && validation.touched.email
+                          ? true
+                          : false
+                      }
+                    />
+                    {validation.errors.email && validation.touched.email ? (
+                      <FormFeedback type="invalid">
+                        {validation.errors.email}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                  <div className="mb-3">
+                    <Label className="form-label" htmlFor="product-title-input">
+                      website
+                    </Label>
+                    <Input
+                      type="text"
+                      className="form-control"
+                      id="website"
+                      placeholder="Enter company website"
+                      name="website"
+                      value={validation.values.website || ""}
+                      onBlur={validation.handleBlur}
+                      onChange={validation.handleChange}
+                      invalid={
+                        validation.errors.website && validation.touched.website
+                          ? true
+                          : false
+                      }
+                    />
+                    {validation.errors.website && validation.touched.website ? (
+                      <FormFeedback type="invalid">
+                        {validation.errors.website}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </CardBody>
+              </Card>
+              <Card>
+                <CardBody>
+                  <div className="mt-4">
+                    <h5 className="fs-15 mb-3">categories & Menu</h5>
+                    <Row>
+                      <Col lg={4} md={6}>
+                        <div className="mb-3">
+                          <Label
+                            htmlFor="choices-multiple-groups"
+                            className="form-label text-muted"
+                          >
+                            categories
+                          </Label>
+                          <Select
+                            value={selectedMulti3}
+                            isMulti={true}
+                            onChange={(selectedMulti3: any) => {
+                              handleMulti3(selectedMulti3);
+                            }}
+                            options={categories}
+                            closeMenuOnSelect={false}
+                            components={animatedComponents}
+                          />
+                        </div>
+                      </Col>
+                      <Col lg={4} md={6}>
+                        <div className="mb-3">
+                          <Label
+                            htmlFor="choices-multiple-groups"
+                            className="form-label text-muted"
+                          >
+                            Menu
+                          </Label>
+                          <Select
+                            value={selectedMulti4}
+                            isMulti={true}
+                            onChange={(selectedMulti4: any) => {
+                              handleMulti4(selectedMulti4);
+                            }}
+                            options={menues}
+                            closeMenuOnSelect={false}
+                            components={animatedComponents}
+                          />
+                        </div>
+                      </Col>
+                    </Row>
                   </div>
                 </CardBody>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <h5 className="card-title mb-0">Product Gallery</h5>
+                  <h5 className="card-title mb-0">Company Gallery</h5>
                 </CardHeader>
                 <CardBody>
                   <div className="mb-4">
-                    <h5 className="fs-14 mb-1">Product Image</h5>
-                    <p className="text-muted">Add Product main Image.</p>
+                    <h5 className="fs-14 mb-1">Company Image</h5>
+                    <p className="text-muted">Add Company Image.</p>
                     <div className="text-center">
                       <div className="position-relative d-inline-block">
                         <div className="position-absolute top-100 start-100 translate-middle">
-                          <Label htmlFor="customer-image-input" className="mb-0" data-bs-toggle="tooltip" data-bs-placement="right" title="Select Image">
-                              <div className="avatar-xs cursor-pointer">
-                                <div className="avatar-title bg-light border rounded-circle text-muted">
-                                  <i className="ri-image-fill"></i>
-                                </div>
+                          <Label
+                            htmlFor="customer-image-input"
+                            className="mb-0"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="right"
+                            title="Select Image"
+                          >
+                            <div className="avatar-xs cursor-pointer">
+                              <div className="avatar-title bg-light border rounded-circle text-muted">
+                                <i className="ri-image-fill"></i>
                               </div>
-                            </Label>
-                          <Input className="form-control d-none" id="customer-image-input" type="file" accept="image/png, image/gif, image/jpeg" onChange={handleImageChange}
+                            </div>
+                          </Label>
+                          <Input
+                            className="form-control d-none"
+                            id="customer-image-input"
+                            type="file"
+                            accept="image/png, image/gif, image/jpeg"
+                            onChange={handleImageChange}
                             invalid={
-                              validation.touched.image && validation.errors.image ? true : false
+                              validation.touched.logo && validation.errors.logo
+                                ? true
+                                : false
                             }
                           />
                         </div>
                         <div className="avatar-lg">
                           <div className="avatar-title bg-light rounded">
-                            <img src={selectedImage} id="product-img" alt="" className="avatar-md h-auto" />
+                            <img
+                              src={selectedImage}
+                              id="product-img"
+                              alt=""
+                              className="avatar-md h-auto"
+                            />
                           </div>
                         </div>
                       </div>
-                      {validation.errors.image && validation.touched.image ? (
-                          <FormFeedback type="invalid"> {validation.errors.image} </FormFeedback>
-                        ) : null}
+                      {validation.errors.logo && validation.touched.logo ? (
+                        <FormFeedback type="invalid">
+                          {" "}
+                          {validation.errors.logo}{" "}
+                        </FormFeedback>
+                      ) : null}
                     </div>
                   </div>
-                  <div>
-                    <h5 className="fs-14 mb-1">Product Gallery</h5>
-                    <p className="text-muted">Add Product Gallery Images.</p>
-
-                    <Dropzone
-                      onDrop={(acceptedFiles) => {
-                        handleAcceptedFiles(acceptedFiles);
-                      }}
-                    >
-                      {({ getRootProps, getInputProps }) => (
-                        <div className="dropzone dz-clickable">
-                          <div
-                            className="dz-message needsclick"
-                            {...getRootProps()}
-                          >
-                            <div className="mb-3 mt-5">
-                              <i className="display-4 text-muted ri-upload-cloud-2-fill" />
-                            </div>
-                            <h5>Drop files here or click to upload.</h5>
-                          </div>
-                        </div>
-                      )}
-                    </Dropzone>
-                    <div className="list-unstyled mb-0" id="file-previews">
-                      {selectedFiles.map((f:any, i:any) => {
-                        return (
-                          <Card
-                            className="mt-1 mb-0 shadow-none border dz-processing dz-image-preview dz-success dz-complete"
-                            key={i + "-file"}
-                          >
-                            <div className="p-2">
-                              <Row className="align-items-center">
-                                <Col className="col-auto">
-                                  <img
-                                    data-dz-thumbnail=""
-                                    height="80"
-                                    className="avatar-sm rounded bg-light"
-                                    alt={f.name}
-                                    src={f.preview}
-                                  />
-                                </Col>
-                                <Col>
-                                  <Link
-                                    to="#"
-                                    className="text-muted font-weight-bold"
-                                  >
-                                    {f.name}
-                                  </Link>
-                                  <p className="mb-0">
-                                    <strong>{f.formattedSize}</strong>
-                                  </p>
-                                </Col>
-                              </Row>
-                            </div>
-                          </Card>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <Nav className="nav-tabs-custom card-header-tabs border-bottom-0">
-                    <NavItem>
-                      <NavLink
-                        style={{ cursor: "pointer" }}
-                        className={classnames({
-                          active: customActiveTab === "1",
-                        })}
-                        onClick={() => {
-                          toggleCustom("1");
-                        }}
-                      >
-                        General Info
-                      </NavLink>
-                    </NavItem>
-                    
-                  </Nav>
-                </CardHeader>
-
-                <CardBody>
-                  <TabContent activeTab={customActiveTab}>
-                    <TabPane id="addproduct-general-info" tabId="1">
-                      <Row>
-                        <Col lg={6}>
-                          <div className="mb-3">
-                            <label
-                              className="form-label"
-                              htmlFor="manufacturer-name-input"
-                            >
-                              Manufacturer Name
-                            </label>
-                            <Input
-                              type="text"
-                              className="form-control"
-                              id="manufacturer-name-input"
-                              name="manufacturer_name"
-                              placeholder="Enter manufacturer name"
-                              value={validation.values.manufacturer_name || ""}
-                              onBlur={validation.handleBlur}
-                              onChange={validation.handleChange}
-                              invalid={validation.errors.manufacturer_name && validation.touched.manufacturer_name ? true : false}
-                            />
-                            {validation.errors.manufacturer_name && validation.touched.manufacturer_name ? (
-                              <FormFeedback type="invalid">{validation.errors.manufacturer_name}</FormFeedback>
-                            ) : null}
-                          </div>
-                        </Col>
-                        <Col lg={6}>
-                          <div className="mb-3">
-                            <label
-                              className="form-label"
-                              htmlFor="manufacturer-brand-input"
-                            >
-                              Manufacturer Brand
-                            </label>
-                            <Input
-                              type="text"
-                              className="form-control"
-                              id="manufacturer-brand-input"
-                              name="manufacturer_brand"
-                              placeholder="Enter manufacturer brand"
-                              value={validation.values.manufacturer_brand || ""}
-                              onBlur={validation.handleBlur}
-                              onChange={validation.handleChange}
-                              invalid={validation.errors.manufacturer_brand && validation.touched.manufacturer_brand ? true : false}
-                            />
-                            {validation.errors.manufacturer_brand && validation.touched.manufacturer_brand ? (
-                              <FormFeedback type="invalid">{validation.errors.manufacturer_brand}</FormFeedback>
-                            ) : null}
-                          </div>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col sm={3}>
-                          <div className="mb-3">
-                            <label
-                              className="form-label"
-                              htmlFor="product-stock-input"
-                            >
-                              Stocks
-                            </label>
-                            <div className="input-group mb-3">
-                              <Input
-                                type="text"
-                                className="form-control"
-                                id="product-stock-input"
-                                placeholder="Enter Stocks"
-                                name="stock"
-                                value={validation.values.stock || ""}
-                                onBlur={validation.handleBlur}
-                                onChange={validation.handleChange}
-                                invalid={validation.errors.stock && validation.touched.stock ? true : false}
-                              />
-                              {validation.errors.stock && validation.touched.stock ? (
-                                <FormFeedback type="invalid">{validation.errors.stock}</FormFeedback>
-                              ) : null}
-                            </div>
-                          </div>
-                        </Col>
-
-                        <Col sm={3}>
-                          <div className="mb-3">
-                            <label
-                              className="form-label"
-                              htmlFor="product-price-input"
-                            >
-                              Price
-                            </label>
-                            <div className="input-group mb-3">
-                              <span
-                                className="input-group-text"
-                                id="product-price-addon"
-                              >
-                                $
-                              </span>
-                              <Input
-                                type="text"
-                                className="form-control"
-                                id="product-price-input"
-                                placeholder="Enter price"
-                                name="price"
-                                aria-label="Price"
-                                aria-describedby="product-price-addon"
-                                value={validation.values.price || ""}
-                                onBlur={validation.handleBlur}
-                                onChange={validation.handleChange}
-                                invalid={validation.errors.price && validation.touched.price ? true : false}
-                              />
-                              {validation.errors.price && validation.touched.price ? (
-                                <FormFeedback type="invalid">{validation.errors.price}</FormFeedback>
-                              ) : null}
-                            </div>
-                          </div>
-                        </Col>
-
-                        <Col sm={3}>
-                          <div className="mb-3">
-                            <label
-                              className="form-label"
-                              htmlFor="product-Discount-input"
-                            >
-                              Discount
-                            </label>
-                            <div className="input-group mb-3">
-                              <span
-                                className="input-group-text"
-                                id="product-Discount-addon"
-                              >
-                                %
-                              </span>
-                              <Input
-                                type="text"
-                                className="form-control"
-                                id="product-Discount-input"
-                                placeholder="Enter Discount"
-                                name="product_discount"
-                                aria-label="product_discount"
-                                aria-describedby="product-orders-addon"
-                                value={validation.values.product_discount || ""}
-                                onBlur={validation.handleBlur}
-                                onChange={validation.handleChange}
-                                invalid={validation.errors.product_discount && validation.touched.product_discount ? true : false}
-                              />
-                              {validation.errors.product_discount && validation.touched.product_discount ? (
-                                <FormFeedback type="invalid">{validation.errors.product_discount}</FormFeedback>
-                              ) : null}
-                            </div>
-                          </div>
-                        </Col>
-
-                        <Col sm={3}>
-                          <div className="mb-3">
-                            <label
-                              className="form-label"
-                              htmlFor="product-orders-input"
-                            >
-                              Orders
-                            </label>
-                            <div className="input-group mb-3">
-                              <Input
-                                type="text"
-                                className="form-control"
-                                id="product-orders-input"
-                                placeholder="Enter orders"
-                                name="orders"
-                                aria-label="orders"
-                                aria-describedby="product-orders-addon"
-                                value={validation.values.orders || ""}
-                                onBlur={validation.handleBlur}
-                                onChange={validation.handleChange}
-                                invalid={validation.errors.orders && validation.touched.orders ? true : false}
-                              />
-                              {validation.errors.orders && validation.touched.orders ? (
-                                <FormFeedback type="invalid">{validation.errors.orders}</FormFeedback>
-                              ) : null}
-                            </div>
-                          </div>
-                        </Col>
-                      </Row>
-                    </TabPane>
-                  </TabContent>
                 </CardBody>
               </Card>
 
@@ -584,7 +549,7 @@ const EcommerceAddProduct = (props:any) => {
           <Col lg={4}>
             <Card>
               <CardHeader>
-                <h5 className="card-title mb-0">Publish</h5>
+                <h5 className="card-title mb-0">Adresse</h5>
               </CardHeader>
               <CardBody>
                 <div className="mb-3">
@@ -592,165 +557,310 @@ const EcommerceAddProduct = (props:any) => {
                     htmlFor="choices-publish-status-input"
                     className="form-label"
                   >
-                    Status
+                    Country
                   </Label>
                   <Input
-                    name="status"
+                    name="country"
                     type="select"
                     className="form-select"
                     id="choices-publish-status-input"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={
-                      validation.values.status || ""
-                    }
+                    value={validation.values.country || ""}
                   >
-                    {productStatus.map((item, key) => (
+                    {country.map((item, key) => (
                       <React.Fragment key={key}>
-                        {item.options.map((item, key) => (<option value={item.value} key={key}>{item.label}</option>))}
+                        {item.options.map((item, key) => (
+                          <option value={item.value} key={key}>
+                            {item.label}
+                          </option>
+                        ))}
                       </React.Fragment>
                     ))}
                   </Input>
-                  {validation.touched.status &&
-                    validation.errors.status ? (
+                  {validation.touched.country && validation.errors.country ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.status}
+                      {validation.errors.country}
                     </FormFeedback>
                   ) : null}
                 </div>
 
-                <div>
+                <div className="mb-3">
                   <Label
-                    htmlFor="choices-publish-visibility-input"
+                    htmlFor="choices-publish-status-input"
                     className="form-label"
                   >
-                    Visibility
+                    city
                   </Label>
-
-                  <Select
-                    value={selectedVisibility}
-                    onChange={(selectedVisibility:any) => {
-                      handleSelectVisibility(selectedVisibility);
-                    }}
-                    options={productVisibility}
-                    name="choices-publish-visibility-input"
-                    classNamePrefix="select2-selection form-select"
-                  />
-                </div>
-              </CardBody>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <h5 className="card-title mb-0">Publish Schedule</h5>
-              </CardHeader>
-
-              <CardBody>
-                <div>
-                  <label
-                    htmlFor="datepicker-publish-input"
-                    className="form-label"
+                  <Input
+                    name="city"
+                    type="select"
+                    className="form-select"
+                    id="choices-publish-status-input"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.city || ""}
                   >
-                    Publish Date & Time
-                  </label>
-                  <Flatpickr
-                    name="publishedDate"
-                    id="publishedDate-field"
-                    className="form-control"
-                    placeholder="Select a date"
-                    options={{
-                      enableTime: true,
-                      altInput: true,
-                      altFormat: "d M, Y, G:i K",
-                      dateFormat: "d M, Y, G:i K",
-                    }}
-                    onChange={(e) =>
-                      dateformate(e)
-                    }
-                    value={validation.values.publishedDate || ""}
-                  />
-                  {validation.touched.publishedDate && validation.errors.publishedDate ? (
-                    <FormFeedback type="invalid">{validation.errors.publishedDate}</FormFeedback>
+                    {tunisiaCities.map((item, key) => (
+                      <React.Fragment key={key}>
+                        {item.options.map((item, key) => (
+                          <option value={item.value} key={key}>
+                            {item.label}
+                          </option>
+                        ))}
+                      </React.Fragment>
+                    ))}
+                  </Input>
+                  {validation.touched.city && validation.errors.city ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.city}
+                    </FormFeedback>
                   ) : null}
                 </div>
+                <Row>
+                  <Col lg={6}>
+                    <div className="mb-3">
+                      <label
+                        className="form-label"
+                        htmlFor="manufacturer-name-input"
+                      >
+                        Street
+                      </label>
+                      <Input
+                        type="text"
+                        className="form-control"
+                        id="Street"
+                        name="Street"
+                        placeholder="Enter Street"
+                        value={validation.values.Street || ""}
+                        onBlur={validation.handleBlur}
+                        onChange={validation.handleChange}
+                        invalid={
+                          validation.errors.Street && validation.touched.Street
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.errors.Street && validation.touched.Street ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.Street}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+                  <Col lg={6}>
+                    <div className="mb-3">
+                      <label className="form-label" htmlFor="zip">
+                        Zip
+                      </label>
+                      <Input
+                        type="text"
+                        className="form-control"
+                        id="zip"
+                        name="zip"
+                        placeholder="Enter Zip"
+                        value={validation.values.zip || ""}
+                        onBlur={validation.handleBlur}
+                        onChange={validation.handleChange}
+                        invalid={
+                          validation.errors.zip && validation.touched.zip
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.errors.zip && validation.touched.zip ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.zip}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+                </Row>
               </CardBody>
             </Card>
 
             <Card>
               <CardHeader>
-                <h5 className="card-title mb-0">Product Categories</h5>
+                <h5 className="card-title mb-0">Social media</h5>
               </CardHeader>
               <CardBody>
-                <p className="text-muted mb-2">
-                  {" "}
-                  <Link to="#" className="float-end text-decoration-underline">
-                    Add New
-                  </Link>
-                  Select product category
-                </p>
-
-
-
-                <Input
-                  name="category"
-                  type="select"
-                  className="form-select"
-                  id="category-field"
-                  onChange={validation.handleChange}
-                  onBlur={validation.handleBlur}
-                  value={
-                    validation.values.category || ""
-                  }
-                >
-                  {productCategory.map((item, key) => (
-                    <React.Fragment key={key}>
-                      {item.options.map((item, key) => (<option value={item.value} key={key}>{item.label}</option>))}
-                    </React.Fragment>
-                  ))}
-                </Input>
-                {validation.touched.category &&
-                  validation.errors.category ? (
-                  <FormFeedback type="invalid">
-                    {validation.errors.category}
-                  </FormFeedback>
-                ) : null}
+                <Row>
+                  <Col lg={6}>
+                    <div className="mb-3">
+                      <label
+                        className="form-label"
+                        htmlFor="manufacturer-name-input"
+                      >
+                        facebook page link
+                      </label>
+                      <Input
+                        type="text"
+                        className="form-control"
+                        id="facebook"
+                        name="facebook"
+                        placeholder="Enter facebook page link"
+                        value={validation.values.facebook || ""}
+                        onBlur={validation.handleBlur}
+                        onChange={validation.handleChange}
+                        invalid={
+                          validation.errors.facebook &&
+                          validation.touched.facebook
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.errors.facebook &&
+                      validation.touched.facebook ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.facebook}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+                  <Col lg={6}>
+                    <div className="mb-3">
+                      <label className="form-label" htmlFor="zip">
+                        Instagram
+                      </label>
+                      <Input
+                        type="text"
+                        className="form-control"
+                        id="instagram"
+                        name="instagram"
+                        placeholder="Enter instagram page link"
+                        value={validation.values.instagram || ""}
+                        onBlur={validation.handleBlur}
+                        onChange={validation.handleChange}
+                        invalid={
+                          validation.errors.instagram &&
+                          validation.touched.instagram
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.errors.instagram &&
+                      validation.touched.instagram ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.instagram}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+                </Row>
               </CardBody>
             </Card>
 
             <Card>
               <CardHeader>
-                <h5 className="card-title mb-0">Product Tags</h5>
+                <h5 className="card-title mb-0">Manager Data</h5>
               </CardHeader>
               <CardBody>
-                <div className="hstack gap-3 align-items-start">
-                  <div className="flex-grow-1">
+                <Row>
+                  <Col lg={6}>
+                    <div className="mb-3">
+                      <label
+                        className="form-label"
+                        htmlFor="manufacturer-name-input"
+                      >
+                        first name
+                      </label>
+                      <Input
+                        type="text"
+                        className="form-control"
+                        id="firstName"
+                        name="firstName"
+                        placeholder="Enter firstName"
+                        value={validation.values.firstName || ""}
+                        onBlur={validation.handleBlur}
+                        onChange={validation.handleChange}
+                        invalid={
+                          validation.errors.firstName &&
+                          validation.touched.firstName
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.errors.firstName &&
+                      validation.touched.firstName ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.firstName}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+                  <Col lg={6}>
+                    <div className="mb-3">
+                      <label className="form-label" htmlFor="zip">
+                        Last name
+                      </label>
+                      <Input
+                        type="text"
+                        className="form-control"
+                        id="lastName"
+                        name="lastName"
+                        placeholder="Enter last Name"
+                        value={validation.values.lastName || ""}
+                        onBlur={validation.handleBlur}
+                        onChange={validation.handleChange}
+                        invalid={
+                          validation.errors.lastName &&
+                          validation.touched.lastName
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.errors.lastName &&
+                      validation.touched.lastName ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.lastName}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </Col>
+                  <div className="mb-3">
+                    <Label className="form-label" htmlFor="product-title-input">
+                      Manager email
+                    </Label>
                     <Input
+                      type="email"
                       className="form-control"
-                      placeholder="Enter tags"
-                      type="text"
-                      name="product_tags"
-                      value={validation.values.product_tags || ""}
+                      id="mangerEmail"
+                      placeholder="Enter company email"
+                      name="mangerEmail"
+                      value={validation.values.mangerEmail || ""}
                       onBlur={validation.handleBlur}
                       onChange={validation.handleChange}
-                      invalid={validation.errors.product_tags && validation.touched.product_tags ? true : false}
+                      invalid={
+                        validation.errors.mangerEmail &&
+                        validation.touched.mangerEmail
+                          ? true
+                          : false
+                      }
                     />
-                    {validation.errors.product_tags && validation.touched.product_tags ? (
-                      <FormFeedback type="invalid">{validation.errors.product_tags}</FormFeedback>
+                    {validation.errors.mangerEmail &&
+                    validation.touched.mangerEmail ? (
+                      <FormFeedback type="invalid">
+                        {validation.errors.mangerEmail}
+                      </FormFeedback>
                     ) : null}
                   </div>
-                </div>
+                </Row>
               </CardBody>
             </Card>
 
             <Card>
               <CardHeader>
-                <h5 className="card-title mb-0">Product Short Description</h5>
+                <h5 className="card-title mb-0">Company Description</h5>
               </CardHeader>
               <CardBody>
                 <p className="text-muted mb-2">
-                  Add short description for product
+                  Add short description for the company
                 </p>
                 <textarea
+                  name="description"
+                  value={validation.values.description || ""}
+                  onBlur={validation.handleBlur}
+                  onChange={validation.handleChange}
                   className="form-control"
                   placeholder="Must enter minimum of a 100 characters"
                   rows={3}

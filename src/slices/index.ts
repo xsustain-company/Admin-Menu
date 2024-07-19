@@ -68,7 +68,8 @@ import JobReducer from "./jobs/reducer";
 
 // API Key
 import APIKeyReducer from "./apiKey/reducer";
-
+//companies
+import CompaniesReducer from   "./companies/reducer"
 const rootReducer = combineReducers({
     Layout: LayoutReducer,
     Login: LoginReducer,
@@ -95,6 +96,7 @@ const rootReducer = combineReducers({
     FileManager: FileManagerReducer,
     Todos: TodosReducer,
     Jobs: JobReducer,
+    Companies: CompaniesReducer,
     APIKey: APIKeyReducer
 });
 

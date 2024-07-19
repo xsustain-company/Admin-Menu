@@ -78,17 +78,7 @@ const CreateProject = () => {
 
                                     <div className="mb-3">
                                         <Label className="form-label">Project Description</Label>
-                                        <CKEditor
-                                            editor={ClassicEditor}
-                                            data="<p>Hello from CKEditor 5!</p>"
-                                            onReady={(editor) => {
-                                                // You can store the "editor" and use when it is needed.
-                                                
-                                            }}
-                                            // onChange={(editor) => {
-                                            //     editor.getData();
-                                            // }}
-                                            />
+                                        
                                     </div>
 
                                     <Row>

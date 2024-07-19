@@ -24,6 +24,7 @@ import BreadCrumb from "../../../Components/Common/BreadCrumb";
 import TableContainer from "../../../Components/Common/TableContainer";
 import DeleteModal from "../../../Components/Common/DeleteModal";
 import { isEmpty } from "lodash";
+import { getCompaniess } from "slices/companies/thunk";
 
 // Export Modal
 import ExportCSVModal from "../../../Components/Common/ExportCSVModal";
@@ -55,6 +56,15 @@ const EcommerceOrders = () => {
   const [activeTab, setActiveTab] = useState("1");
 
   const dispatch: any = useDispatch();
+  const slectedCompanies = createSelector(
+    (state: any) => state.Companies,
+    (Companies) => Companies.companies
+  );
+  // Inside your component
+  const companies = useSelector(slectedCompanies);
+ 
+  const [companiesLIst, setCompaniesList] = useState<any>([]);
+
   const selectLayoutState = (state: any) => state.Ecommerce;
   const selectLayoutProperties = createSelector(
     selectLayoutState,
@@ -64,6 +74,12 @@ const EcommerceOrders = () => {
       error: ecom.error,
     })
   );
+  useEffect(() => {
+    if (companies && !companies.length) {
+      dispatch(getCompaniess());
+    }
+  }, [dispatch, companies]);
+
   // Inside your component
   const {
     orders, isOrderSuccess, error
@@ -230,11 +246,6 @@ const EcommerceOrders = () => {
     },
   });
 
-  useEffect(() => {
-    if (orders && !orders.length) {
-      dispatch(onGetOrders());
-    }
-  }, [dispatch, orders]);
 
   useEffect(() => {
     setOrder(orders);

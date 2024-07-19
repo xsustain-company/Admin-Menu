@@ -6,51 +6,36 @@ import {
 } from "../../../helpers/fakebackend_helper";
 
 import { loginSuccess, logoutUserSuccess, apiError, reset_login_flag } from './reducer';
+import { messages } from "common/data";
 
 // const fireBaseBackend = getFirebaseBackend();
 
 export const loginUser = (user : any, history : any) => async (dispatch : any) => {
   try {
     let response;
-    if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-      let fireBaseBackend : any = getFirebaseBackend();
-      response = fireBaseBackend.loginUser(
-        user.email,
-        user.password
-      );
-    } else if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
-      response = postJwtLogin({
-        email: user.email,
-        password: user.password
-      });
-
-    } else if (process.env.REACT_APP_API_URL) {
+    if (process.env.REACT_APP_API_URL) {
       response = postFakeLogin({
         email: user.email,
         password: user.password,
       });
     }
 
-    var data = await response;
-
-    if (data) {
+    var data : any = await response;
+    console.log(data);
+    
+    if (data.success) {
+      
       sessionStorage.setItem("authUser", JSON.stringify(data));
-      if (process.env.REACT_APP_DEFAULTAUTH === "fake") {
-        var finallogin: any= JSON.stringify(data);
-        finallogin = JSON.parse(finallogin)
-        data = finallogin.data;
-        if (finallogin.status === "success") {
-          dispatch(loginSuccess(data));
-          history('/dashboard')
-        } else {
-          dispatch(apiError(finallogin));
-        }
-      } else {
         dispatch(loginSuccess(data));
         history('/dashboard')
-      }
+    }else{
+      dispatch(apiError(data.message));
+
     }
   } catch (error : any) {
+    error = {
+      messages :"Incorrect password or email"
+    }
     dispatch(apiError(error));
   }
 };
