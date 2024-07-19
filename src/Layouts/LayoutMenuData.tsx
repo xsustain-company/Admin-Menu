@@ -25,6 +25,11 @@ const Navdata = () => {
     const [isProjects, setIsProjects] = useState<boolean>(false);
     const [isTasks, setIsTasks] = useState<boolean>(false);
     const [isCRM, setIsCRM] = useState<boolean>(false);
+    const [isCRM1, setIsCRM1] = useState<boolean>(false);
+    const [isProducts, setIsProducts] = useState<boolean>(false);
+    const [isOrders, setIsOrders] = useState<boolean>(false);
+    const [isCustomers, setIsCustomers] = useState<boolean>(false);
+    
     const [isCrypto, setIsCrypto] = useState<boolean>(false);
     const [isInvoices, setIsInvoices] = useState<boolean>(false);
     const [isSupportTickets, setIsSupportTickets] = useState<boolean>(false);
@@ -57,7 +62,7 @@ const Navdata = () => {
     const [isLevel1, setIsLevel1] = useState<boolean>(false);
     const [isLevel2, setIsLevel2] = useState<boolean>(false);
 
-    const [iscurrentState, setIscurrentState] = useState('Dashboard');
+    const [iscurrentState, setIscurrentState] = useState('Ecommerce');
 
     function updateIconSidebar(e : any) {
         if (e && e.target && e.target.getAttribute("sub-items")) {
@@ -76,8 +81,9 @@ const Navdata = () => {
 
     useEffect(() => {
         document.body.classList.remove('twocolumn-panel');
-        if (iscurrentState !== 'Dashboard') {
-            setIsDashboard(false);
+        if (iscurrentState === 'Dashboard') {
+            history("/dashboard");
+            document.body.classList.add('twocolumn-panel');
         }
         if (iscurrentState !== 'Apps') {
             setIsApps(false);
@@ -109,11 +115,36 @@ const Navdata = () => {
         if (iscurrentState !== 'Maps') {
             setIsMaps(false);
         }
+        if (iscurrentState !== 'Ecommerce') {
+            setIsEcommerce(false);
+        }
+        
         if (iscurrentState !== 'MuliLevel') {
             setIsMultiLevel(false);
         }
         if (iscurrentState === 'Widgets') {
             history("/widgets");
+            document.body.classList.add('twocolumn-panel');
+        }
+        if (iscurrentState === 'Dashboard') {
+            history("/dashboard");
+            document.body.classList.add('twocolumn-panel');
+        }
+        if (iscurrentState !== 'CRM1') {
+            setIsCRM1(false);
+        }
+        if (iscurrentState !== 'Orders') {
+            setIsOrders(false);
+        }
+        if (iscurrentState !== 'Products') {
+            setIsProducts(false);
+        }
+        if (iscurrentState === 'Customers') {
+            history("/apps-ecommerce-customers");
+            document.body.classList.add('twocolumn-panel');
+        }
+        if (iscurrentState === 'CRM') {
+            history("/dashboard-crm");
             document.body.classList.add('twocolumn-panel');
         }
         if (iscurrentState !== 'Landing') {
@@ -123,6 +154,10 @@ const Navdata = () => {
         history,
         iscurrentState,
         isDashboard,
+        isCRM1,
+        isOrders,
+        isProducts,
+        isCustomers,
         isApps,
         isAuth,
         isPages,
@@ -143,52 +178,104 @@ const Navdata = () => {
         },
         {
             id: "dashboard",
-            label: "Dashboards",
-            icon: "ri-dashboard-2-line",
-            link: "/#",
-            stateVariables: isDashboard,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsDashboard(!isDashboard);
-                setIscurrentState('Dashboard');
-                updateIconSidebar(e);
-            },
-            subItems: [
-              
-                {
-                    id: "crm",
-                    label: "CRM",
-                    link: "/dashboard-crm",
-                    parentId: "dashboard",
-                },
-                {
-                    id: "ecommerce",
-                    label: "Ecommerce",
-                    link: "/dashboard",
-                    parentId: "dashboard",
-                },
-                
-               
-            ],
-        },
-        {
-            id: "apps",
-            label: "Apps",
-            icon: "ri-apps-2-line",
+            label: "Dashboard",
+            icon: "ri-pie-chart-line",
             link: "/#",
             click: function (e : any) {
                 e.preventDefault();
-                setIsApps(!isApps);
-                setIscurrentState('Apps');
+                setIscurrentState('Dashboard');
+            }
+        },
+        {
+            id: "Ecommerce",
+            label: "Ecommerce",
+            icon: "ri-eye-2-line",
+            link: "/#",
+            click: function (e : any) {
+                e.preventDefault();
+                setIsEcommerce(!isEcommerce);
+                setIscurrentState('Ecommerce');
                 updateIconSidebar(e);
             },
-            stateVariables: isApps,
+            stateVariables: isEcommerce,
+            subItems : [
+                { id: 1, label: "Shopping Cart", link: "/apps-ecommerce-cart", parentId: "Ecommerce" },
+                { id: 2, label: "Checkout", link: "/apps-ecommerce-checkout", parentId: "Ecommerce" },
+                { id: 3, label: "Sellers", link: "/apps-ecommerce-sellers", parentId: "Ecommerce" },
+                { id: 4, label: "Seller Details", link: "/apps-ecommerce-seller-details", parentId: "Ecommerce" },
+            ],
+            
+            
+        },
+
+        
+        /*
+        {
+            id: "ecommerce1",
+            label: "Ecommerce1",
+            icon: "ri-shopping-cart-line",
+            link: "/#",
+           
+            click: function (e: any) {
+                e.preventDefault();
+                setIsEcommerce1(!isEcommerce1);
+                setIscurrentState('Ecommerce1');
+                updateIconSidebar(e);
+            },
+            stateVariables: isEcommerce1,
+            
             subItems: [
+             
+                    { id: 1, label: "Products", link: "/apps-ecommerce-products", parentId: "ecommerce1" },
+                    { id: 2, label: "Product Details", link: "/apps-ecommerce-product-details", parentId: "ecommerce1" },
+                    { id: 3, label: "Create Product", link: "/apps-ecommerce-add-product", parentId: "ecommerce1" },
+                    { id: 4, label: "Orders", link: "/apps-ecommerce-orders", parentId: "ecommerce1" },
+                    { id: 5, label: "Order Details", link: "/apps-ecommerce-order-details", parentId: "ecommerce1" },
+                    { id: 6, label: "Customers", link: "/apps-ecommerce-customers", parentId: "ecommerce1" },
+                    { id: 7, label: "Shopping Cart", link: "/apps-ecommerce-cart", parentId: "ecommerce1" },
+                    { id: 8, label: "Checkout", link: "/apps-ecommerce-checkout", parentId: "ecommerce1" },
+                    { id: 9, label: "Sellers", link: "/apps-ecommerce-sellers", parentId: "ecommerce1" },
+                    { id: 10, label: "Seller Details", link: "/apps-ecommerce-seller-details", parentId: "ecommerce1" },
+                
+            ]
+            
+        },*/
+        
+        
+
+        { id: "CRM", 
+            label: "CRM",
+            icon: "ri-bar-chart-2-line",
+            link: "/dashboard-crm"  ,
+            click: function (e : any) {
+            e.preventDefault();
+            setIscurrentState('CRM');
+        }},
+        {
+            id: "CRM1",
+            label: "CRM1",
+            icon: "ri-line-chart-line",
+            link: "/#",
+            
+            click: function (e : any) {
+                e.preventDefault();
+                setIsCRM1(!isCRM1);
+                setIscurrentState('CRM1');
+                updateIconSidebar(e);
+            },
+            stateVariables: isCRM1,
+            subItems :[
+                
+                
+                { id: 1, label: "Contacts", link: "/apps-crm-contacts" , parentId: "CRM1"},
+                { id: 2, label: "Companies", link: "/apps-crm-companies" , parentId: "CRM1"},
+                { id: 3, label: "Deals", link: "/apps-crm-deals" , parentId: "CRM1"},
+                { id: 4, label: "Leads", link: "/apps-crm-leads" , parentId: "CRM1"},
                 {
                     id: "calendar",
                     label: "Calendar",
                     link: "/#",
-                    parentId: "apps",
+                    parentId: "CRM1",
                     isChildItem: true,
                     click: function (e: any) {
                         e.preventDefault();
@@ -200,62 +287,22 @@ const Navdata = () => {
                             id: 1,
                             label: "Main Calendar",
                             link: "/apps-calendar",
-                            parentId: "apps"
+                            parentId: "CRM1"
                         },
                         {
                             id: 2,
                             label: "Month Grid",
                             link: "/apps-calendar-month-grid",
-                            parentId: "apps"
+                            parentId: "CRM1"
                         },
                     ]
                 },
                 
               
-                {
-                    id: "appsecommerce",
-                    label: "Ecommerce",
-                    link: "/#",
-                    isChildItem: true,
-                    click: function (e : any) {
-                        e.preventDefault();
-                        setIsEcommerce(!isEcommerce);
-                    },
-                    parentId: "apps",
-                    stateVariables: isEcommerce,
-                    childItems: [
-                        { id: 1, label: "Products", link: "/apps-ecommerce-products", parentId: "apps" },
-                        { id: 2, label: "Product Details", link: "/apps-ecommerce-product-details", parentId: "apps" },
-                        { id: 3, label: "Create Product", link: "/apps-ecommerce-add-product", parentId: "apps" },
-                        { id: 4, label: "Orders", link: "/apps-ecommerce-orders", parentId: "apps" },
-                        { id: 5, label: "Order Details", link: "/apps-ecommerce-order-details", parentId: "apps" },
-                        { id: 6, label: "Customers", link: "/apps-ecommerce-customers", parentId: "apps" },
-                        { id: 7, label: "Shopping Cart", link: "/apps-ecommerce-cart", parentId: "apps" },
-                        { id: 8, label: "Checkout", link: "/apps-ecommerce-checkout", parentId: "apps" },
-                        { id: 9, label: "Sellers", link: "/apps-ecommerce-sellers", parentId: "apps" },
-                        { id: 10, label: "Seller Details", link: "/apps-ecommerce-seller-details", parentId: "apps" },
-                    ]
-                },
+                
                
                
-                {
-                    id: "appscrm",
-                    label: "CRM",
-                    link: "/#",
-                    isChildItem: true,
-                    click: function (e : any) {
-                        e.preventDefault();
-                        setIsCRM(!isCRM);
-                    },
-                    parentId: "apps",
-                    stateVariables: isCRM,
-                    childItems: [
-                        { id: 1, label: "Contacts", link: "/apps-crm-contacts" },
-                        { id: 2, label: "Companies", link: "/apps-crm-companies" },
-                        { id: 3, label: "Deals", link: "/apps-crm-deals" },
-                        { id: 4, label: "Leads", link: "/apps-crm-leads" },
-                    ]
-                },
+                
               
                 {
                     id: "invoices",
@@ -274,9 +321,71 @@ const Navdata = () => {
                         { id: 3, label: "Create Invoice", link: "/apps-invoices-create" },
                     ]
                 },
-              
-               
-               
+            ]
+        },        
+        {
+            //   /apps-ecommerce-products
+            id: "Products",
+            label: "Products",
+            icon: "ri-product-hunt-line",
+            link: "/#",
+            click: function (e : any) {
+                e.preventDefault();
+                setIsProducts(!isProducts);
+                setIscurrentState('Products');
+                updateIconSidebar(e);
+            },
+            stateVariables: isProducts,
+            subItems :[
+                { id: 1, label: "Products List", link: "/apps-ecommerce-products" , parentId: "Products"},
+                { id: 2, label: "Product Details", link: "/apps-ecommerce-product-details" , parentId: "Products"},
+                { id: 3, label: "Create Product", link: "/apps-ecommerce-add-product" , parentId: "Products"},
+                
+            ]
+        },     
+        {
+            //   /apps-ecommerce-orders
+            id: "Orders",
+            label: "Orders",
+            icon: "ri-shopping-basket-2-line",
+            link: "/apps-ecommerce-orders",
+            click: function (e : any) {
+                e.preventDefault();
+                setIsOrders(!isOrders);
+                setIscurrentState('Orders');
+                updateIconSidebar(e);
+            },
+            stateVariables: isOrders,
+            subItems :[
+                { id: 1, label: "Orders List", link: "/apps-ecommerce-orders" , parentId: "Orders"},
+                { id: 2, label: "Order Details", link: "/apps-ecommerce-order-details" , parentId: "Orders"},
+            ]
+        },     
+        {
+            id: "customers",
+            label: "Customers",
+            icon: "ri-team-line",
+            link: "/apps-ecommerce-customers",
+            click: function (e : any) {
+                e.preventDefault();
+                setIscurrentState('Customers');
+            }
+        },
+
+        {
+            id: "apps",
+            label: "Apps",
+            icon: "ri-apps-2-line",
+            link: "/#",
+            click: function (e : any) {
+                e.preventDefault();
+                setIsApps(!isApps);
+                setIscurrentState('Apps');
+                updateIconSidebar(e);
+            },
+            stateVariables: isApps,
+            subItems: [
+                {},
               
                
                

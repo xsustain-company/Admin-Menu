@@ -30,7 +30,7 @@ export interface LayoutState {
 }
 
 export const initialState: LayoutState = {
-  layoutType: LAYOUT_TYPES.TWOCOLUMN,
+  layoutType: LAYOUT_TYPES.VERTICAL, //LAYOUT_TYPES.TWOCOLUMN,
   layoutModeType: LAYOUT_MODE_TYPES.LIGHTMODE,
   leftSidebarType: LAYOUT_SIDEBAR_TYPES.LIGHT,
   layoutWidthType: LAYOUT_WIDTH_TYPES.FLUID,

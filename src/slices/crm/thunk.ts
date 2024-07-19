@@ -22,6 +22,7 @@ import {
 export const getContacts = createAsyncThunk("crm/getContacts" , async () => {
   try{
     const response = getContactsApi()
+    console.log("Ressss : ",response);
     return response;
   }catch (error) {
     return error;
