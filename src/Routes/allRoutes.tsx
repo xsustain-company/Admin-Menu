@@ -240,6 +240,7 @@ import ToDoList from "../pages/ToDo";
 import UiLink from "../pages/BaseUi/UiLinks/UiLinks";
 import PrivacyPolicy from "pages/Pages/PrivacyPolicy";
 import Kanbanboard from "pages/Tasks/KanbanBoard";
+import CategoriesDetails from "pages/Ecommerce/Categories/";
 
 const authProtectedRoutes = [
   { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
@@ -256,6 +257,8 @@ const authProtectedRoutes = [
   { path: "/apps-ecommerce-product-details", component: <EcommerceProductDetail /> },
   { path: "/apps-ecommerce-add-product", component: <EcommerceAddProduct /> },
   { path: "/apps-ecommerce-orders", component: <EcommerceOrders /> },
+  { path: "/categories&subCategories", component: <CategoriesDetails /> },
+
   { path: "/apps-ecommerce-order-details", component: <EcommerceOrderDetail /> },
   { path: "/apps-ecommerce-customers", component: <EcommerceCustomers /> },
   { path: "/apps-ecommerce-cart", component: <EcommerceCart /> },

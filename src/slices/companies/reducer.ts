@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getCompaniess, getOneCompanyaddCategories } from './thunk';
+import { getCompaniess, getOneCompany , addCategories } from './thunk';
 export const initialState :any= {
   companies:[],
   products: [],
@@ -51,15 +51,7 @@ const CompaniesSlice = createSlice({
 
 
     
-    builder.addCase(getOneCompany.fulfilled, (state:any, action:any) => {
-      console.log(action.payload);
-      
-      state.oneCompany = action.payload.data; 
-    });
-
-    builder.addCase(getOneCompany.rejected, (state:any, action:any) => {
-      state.error = action.payload.error || null;
-    });
+  
 
 
 
