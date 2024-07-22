@@ -76,6 +76,22 @@ return response
 
 };
 
+export const addCategoryApi = async (data:any) => {
+  
+  console.log(data);
+  try{
+    let response =  await  customAxios.post(url.ADD_CATEGORY,{data})
+    console.log(response);
+    return response
+
+
+  }catch(err){
+    console.log(err);
+    
+  }
+  
+  };
+  
 
 // Login Method
 export const postJwtLogin = (data: any) => api.create(url.POST_FAKE_JWT_LOGIN, data);

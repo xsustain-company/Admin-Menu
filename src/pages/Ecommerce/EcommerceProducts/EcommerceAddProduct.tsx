@@ -215,7 +215,8 @@ const EcommerceAddProduct = (props: any) => {
       instagram:"",
       city:"",
       mangerEmail:"",
-      TablesNumber:"",
+      tablesNumber:"",
+
     },
     validationSchema: Yup.object({
       //to enable later
@@ -277,7 +278,9 @@ const EcommerceAddProduct = (props: any) => {
       formData.append("socialMedia[instagram]", values.instagram);
       formData.append("price", values.price);
       formData.append("mangerEmail", values.mangerEmail);
+      formData.append("tablesNumber", values.tablesNumber);
 
+      
       
       // save new product
       dispatch(addNewCompany(formData));
@@ -403,6 +406,7 @@ const EcommerceAddProduct = (props: any) => {
                       </FormFeedback>
                     ) : null}
                   </div>
+                  
                   <div className="mb-3">
                     <Label className="form-label" htmlFor="product-title-input">
                       website
@@ -425,6 +429,31 @@ const EcommerceAddProduct = (props: any) => {
                     {validation.errors.website && validation.touched.website ? (
                       <FormFeedback type="invalid">
                         {validation.errors.website}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                  <div className="mb-3">
+                    <Label className="form-label" htmlFor="product-title-input">
+                    tables Number
+                    </Label>
+                    <Input
+                      type="text"
+                      className="form-control"
+                      id="tablesNumber"
+                      placeholder="Enter company tables Number "
+                      name="tablesNumber"
+                      value={validation.values.tablesNumber || ""}
+                      onBlur={validation.handleBlur}
+                      onChange={validation.handleChange}
+                      invalid={
+                        validation.errors.tablesNumber && validation.touched.tablesNumber
+                          ? true
+                          : false
+                      }
+                    />
+                    {validation.errors.tablesNumber && validation.touched.tablesNumber ? (
+                      <FormFeedback type="invalid">
+                        {validation.errors.tablesNumber}
                       </FormFeedback>
                     ) : null}
                   </div>

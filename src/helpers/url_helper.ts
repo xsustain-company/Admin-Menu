@@ -4,6 +4,8 @@ export const POST_FAKE_REGISTER = "/auth/signup";
 export const ADD_NEW_COMPANY = "/company/create";
 export const GET_COMPANIES = "/company/listAll";
 
+export const ADD_CATEGORY = "/category/create";
+
 //
 
 //LOGIN

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 //Import Breadcrumb
 import BreadCrumb from "../../Components/Common/BreadCrumb";
@@ -28,6 +28,10 @@ import Select from "react-select";
 import classnames from "classnames";
 import { orderSummary } from "../../common/data/ecommerce";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addCategories } from "slices/thunks";
+import { addCategoryApi } from "helpers/fakebackend_helper";
+import { toast } from "react-toastify";
 
 const EcommerceCheckout = () => {
   document.title="Checkout | Velzon - React Admin & Dashboard Template";
@@ -37,12 +41,25 @@ const EcommerceCheckout = () => {
   const [activeTab, setactiveTab] = useState<number>(1);
   const [passedSteps, setPassedSteps] = useState([1]);
   const [modal, setModal] = useState<boolean>(false);
+  const[categoryName,setCategoryName]=useState<any>({})
   const [deletemodal, setDeleteModal] = useState<boolean>(false);
-
+  const dispatch = useDispatch()
   const toggledeletemodal = () => {
     setDeleteModal(!deletemodal);
   };
+  const addcategory = async ()=> {
+    try{
+      const response = await addCategoryApi(categoryName)
+      if(response){
+        toast.success("category added")
+      }
 
+    }catch(err){
+      toast.error("there is an error while creating the category")
+      console.log(err);
+      
+    }
+  }
   const togglemodal = () => {
     setModal(!modal);
   };
@@ -50,7 +67,10 @@ const EcommerceCheckout = () => {
   function handleSelectCountry(selectedCountry:any) {
     setselectedCountry(selectedCountry);
   }
-
+  useEffect(()=>{
+    console.log(categoryName);
+    
+  },[categoryName])
   function handleSelectState(selectedState:any) {
     setselectedState(selectedState);
   }
@@ -155,7 +175,7 @@ const EcommerceCheckout = () => {
                     <TabContent activeTab={activeTab}>
                       <TabPane tabId={1} id="pills-bill-info">
                         <div>
-                          <h5 className="mb-1">Billing Information</h5>
+                          <h5 className="mb-1">Categories & Menu</h5>
                           <p className="text-muted mb-4">
                             Please fill all information below
                           </p>
@@ -169,145 +189,35 @@ const EcommerceCheckout = () => {
                                   htmlFor="billinginfo-firstName"
                                   className="form-label"
                                 >
-                                  First Name
+                                 Category name
                                 </Label>
                                 <Input
-                                  type="text"
+  onChange={(event) => setCategoryName(event.target.value)}
+  type="text"
                                   className="form-control"
                                   id="billinginfo-firstName"
-                                  placeholder="Enter first name"
+                                  placeholder="Enter category name"
                                 />
                               </div>
                             </Col>
 
-                            <Col sm={6}>
-                              <div className="mb-3">
-                                <Label
-                                  htmlFor="billinginfo-lastName"
-                                  className="form-label"
-                                >
-                                  Last Name
-                                </Label>
-                                <Input
-                                  type="text"
-                                  className="form-control"
-                                  id="billinginfo-lastName"
-                                  placeholder="Enter last name"
-                                />
-                              </div>
-                            </Col>
+                          
                           </Row>
 
-                          <Row>
-                            <Col sm={6}>
-                              <div className="mb-3">
-                                <Label
-                                  htmlFor="billinginfo-email"
-                                  className="form-label"
-                                >
-                                  Email
-                                  <span className="text-muted"> (Optional)</span>
-                                </Label>
-                                <Input
-                                  type="email"
-                                  className="form-control"
-                                  id="billinginfo-email"
-                                  placeholder="Enter email"
-                                />
-                              </div>
-                            </Col>
+                        
 
-                            <Col sm={6}>
-                              <div className="mb-3">
-                                <Label
-                                  htmlFor="billinginfo-phone"
-                                  className="form-label"
-                                >
-                                  Phone
-                                </Label>
-                                <Input
-                                  type="text"
-                                  className="form-control"
-                                  id="billinginfo-phone"
-                                  placeholder="Enter phone no."
-                                />
-                              </div>
-                            </Col>
-                          </Row>
-
-                          <div className="mb-3">
-                            <Label
-                              htmlFor="billinginfo-address"
-                              className="form-label"
-                            >
-                              Address
-                            </Label>
-                            <textarea
-                              className="form-control"
-                              id="billinginfo-address"
-                              placeholder="Enter address"
-                              rows={3}
-                            ></textarea>
-                          </div>
-
-                          <Row>
-                            <Col md={4}>
-                              <div className="mb-3">
-                                <Label htmlFor="country" className="form-label">
-                                  Country
-                                </Label>
-                                <Select
-                                  value={selectedCountry}
-                                  onChange={(selectedCountry:any) => {
-                                    handleSelectCountry(selectedCountry);
-                                  }}
-                                  options={productCountry}
-                                  id="country"
-                                ></Select>
-                              </div>
-                            </Col>
-
-                            <Col md={4}>
-                              <div className="mb-3">
-                                <Label htmlFor="state" className="form-label">
-                                  State
-                                </Label>
-                                <Select
-                                  id="state"
-                                  value={selectedState}
-                                  onChange={(selectedState:any) => {
-                                    handleSelectState(selectedState);
-                                  }}
-                                  options={productState}
-                                ></Select>
-                              </div>
-                            </Col>
-
-                            <Col md={4}>
-                              <div className="mb-3">
-                                <Label htmlFor="zip" className="form-label">
-                                  Zip Code
-                                </Label>
-                                <Input
-                                  type="text"
-                                  className="form-control"
-                                  id="zip"
-                                  placeholder="Enter zip code"
-                                />
-                              </div>
-                            </Col>
-                          </Row>
+                       
 
                           <div className="d-flex align-items-start gap-3 mt-3">
                             <button
                               type="button"
                               className="btn btn-primary btn-label right ms-auto nexttab"
                               onClick={() => {
-                                toggleTab(activeTab + 1);
+                                addcategory()
                               }}
                             >
                               <i className="ri-truck-line label-icon align-middle fs-16 ms-2"></i>
-                              Proceed to Shipping
+                              Add the category
                             </button>
                           </div>
                         </div>

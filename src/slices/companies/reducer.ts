@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getCompaniess,  } from './thunk';
+import { getCompaniess, addCategories } from './thunk';
 export const initialState :any= {
   companies:[],
   products: [],
@@ -23,6 +23,15 @@ const CompaniesSlice = createSlice({
     });
 
     builder.addCase(getCompaniess.rejected, (state:any, action:any) => {
+      state.error = action.payload.error || null;
+    });
+    builder.addCase(addCategories.fulfilled, (state:any, action:any) => {
+      console.log(action.payload);
+      
+     // state.companies = action.payload.data; 
+    });
+
+    builder.addCase(addCategories.rejected, (state:any, action:any) => {
       state.error = action.payload.error || null;
     });
 
