@@ -80,6 +80,8 @@ const EcommerceOrders = () => {
     }
   }, [dispatch, companies]);
 
+
+
   // Inside your component
   const {
     orders, isOrderSuccess, error
@@ -246,7 +248,6 @@ const EcommerceOrders = () => {
     },
   });
 
-
   useEffect(() => {
     setOrder(companies);
   }, [companies]);
@@ -323,7 +324,9 @@ const EcommerceOrders = () => {
     setSelectedCheckBoxDelete(ele);
   };
 
+  
 
+  
   // Column
   const columns = useMemo(
     () => [
@@ -342,7 +345,7 @@ const EcommerceOrders = () => {
         accessorKey: "_id",
         enableColumnFilter: false,
         cell: (cell: any) => {
-          return <Link to="/apps-ecommerce-order-details" className="fw-medium link-primary">{cell.getValue()}</Link>;
+          return <Link to={`/apps-ecommerce-order-details?id=${cell.getValue()}`} className="fw-medium link-primary">{cell.getValue()}</Link>;
         },
       },
       {
@@ -407,7 +410,7 @@ const EcommerceOrders = () => {
             <ul className="list-inline hstack gap-2 mb-0">
               <li className="list-inline-item">
                 <Link
-                  to="/apps-ecommerce-order-details"
+                  to={`/apps-ecommerce-order-details?id=${cellProps.getValue()}`}
                   className="text-primary d-inline-block"
                 >
                   <i className="ri-eye-fill fs-16"></i>
@@ -761,7 +764,6 @@ const EcommerceOrders = () => {
                             {validation.touched.amount && validation.errors.amount ? (
                               <FormFeedback type="invalid">{validation.errors.amount}</FormFeedback>
                             ) : null}
-
                           </div>
                         </div>
                         <div className="col-md-6">
