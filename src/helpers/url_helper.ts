@@ -3,7 +3,7 @@ export const POST_FAKE_REGISTER = "/auth/signup";
 // add company 
 export const ADD_NEW_COMPANY = "/company/create";
 export const GET_COMPANIES = "/company/listAll";
-
+export const GET_COMPANY = "/company/getOne"
 //
 
 //LOGIN

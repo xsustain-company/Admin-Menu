@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardBody,
@@ -9,21 +9,30 @@ import {
   Collapse
 } from "reactstrap";
 
+import { useSelector, useDispatch } from "react-redux";
 import classnames from "classnames";
-import { Link } from "react-router-dom";
-
+import { Link, useLocation, useParams } from "react-router-dom";
 import BreadCrumb from "../../../Components/Common/BreadCrumb";
 import { productDetails } from "../../../common/data/ecommerce";
 import EcommerceOrderProduct from "./EcommerceOrderProduct";
 import avatar3 from "../../../assets/images/users/avatar-3.jpg";
+import { createSelector } from "reselect";
+import { getOneCompany } from "slices/thunks";
 
 const EcommerceOrderDetail = (props:any) => {
   document.title = "Order Details | Velzon - React Admin & Dashboard Template";
-
+  const [company,setCompany] =useState<any>([]);
   const [col1, setcol1] = useState<boolean>(true);
   const [col2, setcol2] = useState<boolean>(true);
   const [col3, setcol3] = useState<boolean>(true);
-
+  const useQuery = () => {
+    return new URLSearchParams(useLocation().search);
+  };
+  const query = useQuery();
+  const id = query.get("id");
+  
+  
+  
   function togglecol1() {
     setcol1(!col1);
   }
@@ -35,6 +44,31 @@ const EcommerceOrderDetail = (props:any) => {
   function togglecol3() {
     setcol3(!col3);
   }
+
+  const dispatch: any = useDispatch();
+  const slectedCompany = createSelector(
+    (state: any) => state.Companies,
+    (Companies) => Companies.oneCompany
+  );  // Inside your component
+  const Company = useSelector(slectedCompany);
+    useEffect(()=>{
+      console.log(Company);
+      
+    },[])
+  useEffect(() => {
+    if (Company && !Company.length) {
+      
+      dispatch(getOneCompany(id));
+    }
+  }, [dispatch]);
+  useEffect(() => {
+   setCompany(Company)
+  }, [Company]);
+
+  // to remove later
+  useEffect(()=>{
+    console.log("******",company);
+  },[company])
 
   return (
     <div className="page-content">

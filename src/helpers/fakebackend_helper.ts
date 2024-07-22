@@ -77,6 +77,17 @@ return response
 };
 
 
+export const getOneCompanyApi = async (id : any) => {
+  
+  let response =  await  customAxios.get(url.GET_COMPANY+"/"+id)
+  console.log(response);
+  
+  return response
+  
+  };
+  
+  
+
 // Login Method
 export const postJwtLogin = (data: any) => api.create(url.POST_FAKE_JWT_LOGIN, data);
 
