@@ -88,12 +88,23 @@ class APIClient {
       }
     });
   };
+  updateWithImage = (url :string, data:any) => {
+    console.log(data);
+    
+    return customAxios.put(url, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+  };
     /**
    * Updates data
    */
   update = (url:string, data:any) => {
     return axios.patch(url, data);
   };
+
+
 
   put = (url:string, data:any) => {
     return axios.put(url, data);

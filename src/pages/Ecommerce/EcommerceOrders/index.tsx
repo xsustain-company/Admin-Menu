@@ -410,7 +410,7 @@ const EcommerceOrders = () => {
             <ul className="list-inline hstack gap-2 mb-0">
               <li className="list-inline-item">
                 <Link
-                  to={`/apps-ecommerce-order-details?id=${cellProps.getValue()}`}
+                  to={`/apps-ecommerce-order-details?id=${cellProps.row.original._id}`}
                   className="text-primary d-inline-block"
                 >
                   <i className="ri-eye-fill fs-16"></i>
@@ -418,7 +418,7 @@ const EcommerceOrders = () => {
               </li>
               <li className="list-inline-item edit">
                 <Link
-                  to="#"
+                  to={`/apps-ecommerce-update-order?id=${cellProps.row.original._id}`}
                   className="text-primary d-inline-block edit-item-btn"
                   onClick={() => {
                     const orderData = cellProps.row.original;

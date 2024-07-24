@@ -1,3 +1,4 @@
+import axios from "axios";
 import { APIClient } from "./api_helper";
 import customAxios from "./customAxios/axios";
 
@@ -66,6 +67,9 @@ export const postJwtRegister = (url: string, data: any) => {
 */
 export const addNewCompanyApi = (company : any) => api.createWithImage(url.ADD_NEW_COMPANY, company); //, product
 
+export const updateCompany1 = (company : any,id:string) => api.updateWithImage  (url.UPDATE_COMPANIES+"/"+id, company); //, product
+
+
 export const getCompanies = async () => {
   
   
@@ -96,6 +100,8 @@ export const addCategoryApi = async (data:any) => {
 export const getOneCompanyApi = async (id : any) => {
   
   let response =  await  customAxios.get(url.GET_COMPANY+"/"+id)
+  
+  
   console.log(response);
   
   return response
@@ -251,6 +257,9 @@ export const addNewCompanies = (company : any) => api.create(url.ADD_NEW_COMPANI
 
 // update Companies
 export const updateCompanies = (company : any) => api.update(url.UPDATE_COMPANIES , company); //+ '/' + company._id,
+
+
+
 
 // delete Companies
 export const deleteCompanies = (company : any) => api.delete(url.DELETE_COMPANIES  , { headers: { company } }); // + '/' + company

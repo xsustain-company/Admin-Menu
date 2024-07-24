@@ -59,7 +59,10 @@ import TicketsDetails from '../pages/SupportTickets/TicketsDetails';
 import EcommerceProducts from "../pages/Ecommerce/EcommerceProducts/index";
 import EcommerceProductDetail from "../pages/Ecommerce/EcommerceProducts/EcommerceProductDetail";
 import EcommerceAddProduct from "../pages/Ecommerce/EcommerceProducts/EcommerceAddProduct";
+import EcommerceOrderUpdate from "pages/Ecommerce/EcommerceOrders/EcommerceOrderUpdate";
 import EcommerceOrders from "../pages/Ecommerce/EcommerceOrders/index";
+
+
 import EcommerceOrderDetail from "../pages/Ecommerce/EcommerceOrders/EcommerceOrderDetail";
 import EcommerceCustomers from "../pages/Ecommerce/EcommerceCustomers/index";
 import EcommerceCart from "../pages/Ecommerce/EcommerceCart";
@@ -242,6 +245,7 @@ import PrivacyPolicy from "pages/Pages/PrivacyPolicy";
 import Kanbanboard from "pages/Tasks/KanbanBoard";
 import CategoriesDetails from "pages/Ecommerce/Categories/";
 
+
 const authProtectedRoutes = [
   { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
   { path: "/dashboard-crm", component: <DashboardCrm /> },
@@ -256,6 +260,7 @@ const authProtectedRoutes = [
   { path: "/apps-ecommerce-products", component: <EcommerceProducts /> },
   { path: "/apps-ecommerce-product-details", component: <EcommerceProductDetail /> },
   { path: "/apps-ecommerce-add-product", component: <EcommerceAddProduct /> },
+  { path: "/apps-ecommerce-update-order", component: <EcommerceOrderUpdate /> },
   { path: "/apps-ecommerce-orders", component: <EcommerceOrders /> },
   { path: "/categories&subCategories", component: <CategoriesDetails /> },
 

@@ -88,7 +88,7 @@ export const DELETE_CONTACT = "/apps/contact";
 
 // Companies
 export const ADD_NEW_COMPANIES = "/apps/company";
-export const UPDATE_COMPANIES = "/apps/company";
+export const UPDATE_COMPANIES = "/company/update";
 export const DELETE_COMPANIES = "/apps/company";
 
 // Lead

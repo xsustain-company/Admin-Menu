@@ -18,7 +18,9 @@ import {
   addNewProduct as addNewProductApi,
   updateProduct as updateProductApi,
   addNewCompanyApi,
-  getCompanies
+  getCompanies ,
+  updateCompanies,
+  updateCompany1,
 } from "../../helpers/fakebackend_helper";
 
 export const getProducts = createAsyncThunk("ecommerce/getProducts", async () => {
@@ -81,6 +83,42 @@ export const updateOrder = createAsyncThunk("ecommerce/updateOrder", async (orde
     return error;
   }
 });
+
+export const updateCompany = createAsyncThunk("ecommerce/updateCompany", async (company:any) => {
+  try {
+    const response = updateCompanies(company);
+    const data = await response;
+    toast.success("Company Updateded Successfully", { autoClose: 3000 });
+    return data;
+  } catch (error) {
+    toast.error("Company Updateded Failed", { autoClose: 3000 });
+    return error;
+  }
+});
+
+
+
+export const updateCompanies1 = createAsyncThunk("ecommerce/updateCompany", async (company : any) => {
+  try {
+    console.log("Commpaanyy : " , company);
+
+    
+    
+    const response =await updateCompany1(company.formData ,company.id );
+    console.log("Dataaaaaaaaaa :",response);
+    
+    toast.success("Company Updateded Successfully", { autoClose: 3000 });
+    return response;
+  } catch (error) {
+    toast.error("Company Updateded Failed", { autoClose: 3000 });
+    return error;
+  }
+});
+
+
+
+
+
 
 export const addNewProduct = createAsyncThunk("ecommerce/addNewProduct", async (product:any) => {
   try {

@@ -20,7 +20,7 @@ import { createSelector } from "reselect";
 import { getOneCompany } from "slices/thunks";
 
 const EcommerceOrderDetail = (props:any) => {
-  document.title = "Order Details | Velzon - React Admin & Dashboard Template";
+  document.title = "Company Details | Velzon - React Admin & Dashboard Template";
   const [company,setCompany] =useState<any>([]);
   const [col1, setcol1] = useState<boolean>(true);
   const [col2, setcol2] = useState<boolean>(true);
@@ -63,6 +63,8 @@ const EcommerceOrderDetail = (props:any) => {
   }, [dispatch]);
   useEffect(() => {
    setCompany(Company)
+   console.log("Comp : " ,Company);
+   
   }, [Company]);
 
   // to remove later
@@ -70,14 +72,220 @@ const EcommerceOrderDetail = (props:any) => {
     console.log("******",company);
   },[company])
 
+  const Agent = company ? company.agent : null;
+
+  const companyData = company ? company : null ;
+  console.log("Companyy data :",companyData);
+  
+  
+
   return (
     <div className="page-content">
       <Container fluid>
-        <BreadCrumb title="Order Details" pageTitle="Ecommerce" />
+        <BreadCrumb title="Company Details" pageTitle="Ecommerce" />
 
         <Row>
           <Col xl={9}>
+            
+
             <Card>
+              <CardHeader>
+                <div className="d-sm-flex align-items-center">
+                  <h5 className="card-title flex-grow-1 mb-0">Company Status</h5>
+                  <div className="flex-shrink-0 mt-2 mt-sm-0">
+                    <Link
+                      to="#"
+                      className="btn btn-soft-info btn-sm mt-2 mt-sm-0"
+                    >
+                      <i className="ri-map-pin-line align-middle me-1"></i>{" "}
+                      Change Address
+                    </Link>{" "}
+                    <Link
+                      to="#"
+                      className="btn btn-soft-danger btn-sm mt-2 mt-sm-0"
+                    >
+                      <i className="mdi mdi-archive-remove-outline align-middle me-1"></i>{" "}
+                      Cancel Order
+                    </Link>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardBody>
+                <div className="profile-timeline">
+                  <div
+                    className="accordion accordion-flush"
+                    id="accordionFlushExample"
+                  >
+                     <div className="accordion-item border-0" onClick={togglecol2}>
+                      <div className="accordion-header" id="headingTwo">
+                        <div
+                          className={classnames(
+                            "accordion-button",
+                            "p-2",
+                            "shadow-none",
+                            { collapsed: !col2 }
+                          )}
+                          
+                        >
+                          <div className="d-flex align-items-center">
+                            <div className="flex-shrink-0 avatar-xs">
+                              <div className="avatar-title bg-success rounded-circle">
+                                <i className=" ri-book-open-fill"></i>
+                              </div>
+                            </div>
+                            <div className="flex-grow-1 ms-3">
+                              <h6 className="fs-15 mb-1 fw-semibold">
+                                Menu  {/*-{" "}*/}
+                                <span className="fw-normal">
+                                  {/*Thu, 16 Dec 2021*/}
+                                  
+                                </span>
+                              </h6>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <Collapse
+                        id="collapseTwo"
+                        className="accordion-collapse"
+                        isOpen={col2}
+                      >
+                          <div className="accordion-body ms-2 ps-5 pt-0">
+                            {company.menu && company.menu.map((menuItem: any, index: number) => (
+                              <h6 className="mb-1" key={index}>
+                                {menuItem.name ? menuItem.name : "name not available"}
+                              </h6>
+                            ))}
+                          </div>
+
+                      </Collapse>
+                    </div>
+                    <div className="accordion-item border-0" onClick={togglecol1}>
+                      <div className="accordion-header" id="headingOne">
+                        <div className={classnames(
+                          "accordion-button",
+                          "p-2",
+                          "shadow-none",
+                          { collapsed: !col1 }
+
+                        )}>
+                          <div className="d-flex align-items-center">
+                            <div className="flex-shrink-0 avatar-xs">
+                              <div className="avatar-title bg-success rounded-circle">
+                                <i className="ri-file-list-3-line"></i>
+                              </div>
+                            </div>
+                            <div className="flex-grow-1 ms-3">
+                              <h6 className="fs-15 mb-0 fw-semibold">
+                                Categories {/* -{" "}*/}
+                                <span className="fw-normal">
+                                 {/*Wed, 15 Dec 2021*/} 
+                                </span>
+                              </h6>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <Collapse
+                        id="collapseOne"
+                        className="accordion-collapse"
+                        isOpen={col1}
+                      >
+                      <div className="accordion-body ms-2 ps-5 pt-0">
+                        {company.category && company.category.map((dataCategory : any, index : number) => (
+                          <h6 className="mb-1" key={index}>
+                            {dataCategory.name ? dataCategory.name : "name not available"}
+                          </h6>
+                        ))}
+                      </div>
+
+
+                      </Collapse>
+                    </div>
+                    
+                    
+                    {company?.category?.[0]?.subcategory?.length > 0 ? (
+                      company.category[0].subcategory.map((dataCategory : any, index : number) => (
+                        
+                          
+                        
+                        <div className="accordion-item border-0">
+                        <div className="accordion-header" id="headingFour">
+                          <div
+                            className="accordion-button p-2 shadow-none"
+                          >
+                            <div className="d-flex align-items-center">
+                              <div className="flex-shrink-0 avatar-xs">
+                                <div className="avatar-title bg-light text-success rounded-circle">
+                                  <i className="ri-shopping-basket-2-fill"></i>
+                                </div>
+                              </div>
+                              <div className="flex-grow-1 ms-3">
+                                <h6 className="fs-14 mb-0 fw-semibold">
+                                {dataCategory.name ? dataCategory.name : "name not available"}
+                                </h6>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      ))
+                    ) : (
+                      <p>No subcategories available</p>
+                    )}
+
+                  {/*
+                      <div className="accordion-item border-0">
+                        <div className="accordion-header" id="headingFour">
+                          <div
+                            className="accordion-button p-2 shadow-none"
+                          >
+                            <div className="d-flex align-items-center">
+                              <div className="flex-shrink-0 avatar-xs">
+                                <div className="avatar-title bg-light text-success rounded-circle">
+                                  <i className="ri-takeaway-fill"></i>
+                                </div>
+                              </div>
+                              <div className="flex-grow-1 ms-3">
+                                <h6 className="fs-14 mb-0 fw-semibold">
+                                  Out For Delivery
+                                </h6>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <div className="accordion-item border-0">
+                        <div className="accordion-header" id="headingFive">
+                          <div
+                            className="accordion-button p-2 shadow-none"
+                          >
+                            <div className="d-flex align-items-center">
+                              <div className="flex-shrink-0 avatar-xs">
+                                <div className="avatar-title bg-light text-success rounded-circle">
+                                  <i className="mdi mdi-package-variant"></i>
+                                </div>
+                              </div>
+                              <div className="flex-grow-1 ms-3">
+                                <h6 className="fs-14 mb-0 fw-semibold">
+                                  Delivered
+                                </h6>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  */}
+
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
+
+            {/*
+              <Card>
               <CardHeader>
                 <div className="d-flex align-items-center">
                   <h5 className="card-title flex-grow-1 mb-0">Order #VL2667</h5>
@@ -147,245 +355,83 @@ const EcommerceOrderDetail = (props:any) => {
                   </table>
                 </div>
               </CardBody>
-            </Card>
-
+            </Card>*/
+            }
             <Card>
               <CardHeader>
-                <div className="d-sm-flex align-items-center">
-                  <h5 className="card-title flex-grow-1 mb-0">Order Status</h5>
-                  <div className="flex-shrink-0 mt-2 mt-sm-0">
-                    <Link
-                      to="#"
-                      className="btn btn-soft-info btn-sm mt-2 mt-sm-0"
-                    >
-                      <i className="ri-map-pin-line align-middle me-1"></i>{" "}
-                      Change Address
-                    </Link>{" "}
-                    <Link
-                      to="#"
-                      className="btn btn-soft-danger btn-sm mt-2 mt-sm-0"
-                    >
-                      <i className="mdi mdi-archive-remove-outline align-middle me-1"></i>{" "}
-                      Cancel Order
-                    </Link>
-                  </div>
-                </div>
+                <h5 className="card-title mb-0">
+                  <i className="ri-map-pin-line align-middle me-1 text-muted"></i>Company Adress
+                  
+                </h5>
               </CardHeader>
               <CardBody>
-                <div className="profile-timeline">
-                  <div
-                    className="accordion accordion-flush"
-                    id="accordionFlushExample"
-                  >
-                    <div className="accordion-item border-0" onClick={togglecol1}>
-                      <div className="accordion-header" id="headingOne">
-                        <Link to="#" className={classnames(
-                          "accordion-button",
-                          "p-2",
-                          "shadow-none",
-                          { collapsed: !col1 }
-
-                        )}>
-                          <div className="d-flex align-items-center">
-                            <div className="flex-shrink-0 avatar-xs">
-                              <div className="avatar-title bg-success rounded-circle">
-                                <i className="ri-shopping-bag-line"></i>
-                              </div>
-                            </div>
-                            <div className="flex-grow-1 ms-3">
-                              <h6 className="fs-15 mb-0 fw-semibold">
-                                Order Placed -{" "}
-                                <span className="fw-normal">
-                                  Wed, 15 Dec 2021
-                                </span>
-                              </h6>
-                            </div>
-                          </div>
-                        </Link>
-                      </div>
-                      <Collapse
-                        id="collapseOne"
-                        className="accordion-collapse"
-                        isOpen={col1}
-                      >
-                        <div className="accordion-body ms-2 ps-5 pt-0">
-                          <h6 className="mb-1">An order has been placed.</h6>
-                          <p className="text-muted">
-                            Wed, 15 Dec 2021 - 05:34PM
-                          </p>
-
-                          <h6 className="mb-1">
-                            Seller has processed your order.
-                          </h6>
-                          <p className="text-muted mb-0">
-                            Thu, 16 Dec 2021 - 5:48AM
-                          </p>
-                        </div>
-                      </Collapse>
-                    </div>
-                    <div className="accordion-item border-0" onClick={togglecol2}>
-                      <div className="accordion-header" id="headingTwo">
-                        <Link to="#"
-                          className={classnames(
-                            "accordion-button",
-                            "p-2",
-                            "shadow-none",
-                            { collapsed: !col2 }
-                          )}
-                          
-                        >
-                          <div className="d-flex align-items-center">
-                            <div className="flex-shrink-0 avatar-xs">
-                              <div className="avatar-title bg-success rounded-circle">
-                                <i className="mdi mdi-gift-outline"></i>
-                              </div>
-                            </div>
-                            <div className="flex-grow-1 ms-3">
-                              <h6 className="fs-15 mb-1 fw-semibold">
-                                Packed -{" "}
-                                <span className="fw-normal">
-                                  Thu, 16 Dec 2021
-                                </span>
-                              </h6>
-                            </div>
-                          </div>
-                        </Link>
-                      </div>
-                      <Collapse
-                        id="collapseTwo"
-                        className="accordion-collapse"
-                        isOpen={col2}
-                      >
-                        <div className="accordion-body ms-2 ps-5 pt-0">
-                          <h6 className="mb-1">
-                            Your Item has been picked up by courier partner
-                          </h6>
-                          <p className="text-muted mb-0">
-                            Fri, 17 Dec 2021 - 9:45AM
-                          </p>
-                        </div>
-                      </Collapse>
-                    </div>
-                    <div className="accordion-item border-0" onClick={togglecol3}>
-                      <div className="accordion-header" id="headingThree">
-                        <Link to="#"
-                          className={classnames(
-                            "accordion-button",
-                            "p-2",
-                            "shadow-none",
-                            { collapsed: !col3 }
-                          )}
-                         
-                        >
-                          <div className="d-flex align-items-center">
-                            <div className="flex-shrink-0 avatar-xs">
-                              <div className="avatar-title bg-success rounded-circle">
-                                <i className="ri-truck-line"></i>
-                              </div>
-                            </div>
-                            <div className="flex-grow-1 ms-3">
-                              <h6 className="fs-15 mb-1 fw-semibold">
-                                Shipping -{" "}
-                                <span className="fw-normal">
-                                  Thu, 16 Dec 2021
-                                </span>
-                              </h6>
-                            </div>
-                          </div>
-                        </Link>
-                      </div>
-                      <Collapse
-                        id="collapseThree"
-                        className="accordion-collapse"
-                        isOpen={col3}
-                      >
-                        <div className="accordion-body ms-2 ps-5 pt-0">
-                          <h6 className="fs-14">
-                            RQK Logistics - MFDS1400457854
-                          </h6>
-                          <h6 className="mb-1">Your item has been shipped.</h6>
-                          <p className="text-muted mb-0">
-                            Sat, 18 Dec 2021 - 4.54PM
-                          </p>
-                        </div>
-                      </Collapse>
-                    </div>
-                    <div className="accordion-item border-0">
-                      <div className="accordion-header" id="headingFour">
-                        <Link to="#"
-                          className="accordion-button p-2 shadow-none"
-                        >
-                          <div className="d-flex align-items-center">
-                            <div className="flex-shrink-0 avatar-xs">
-                              <div className="avatar-title bg-light text-success rounded-circle">
-                                <i className="ri-takeaway-fill"></i>
-                              </div>
-                            </div>
-                            <div className="flex-grow-1 ms-3">
-                              <h6 className="fs-14 mb-0 fw-semibold">
-                                Out For Delivery
-                              </h6>
-                            </div>
-                          </div>
-                        </Link>
-                      </div>
-                    </div>
-                    <div className="accordion-item border-0">
-                      <div className="accordion-header" id="headingFive">
-                        <Link
-                          className="accordion-button p-2 shadow-none"
-                          to="#"
-                        >
-                          <div className="d-flex align-items-center">
-                            <div className="flex-shrink-0 avatar-xs">
-                              <div className="avatar-title bg-light text-success rounded-circle">
-                                <i className="mdi mdi-package-variant"></i>
-                              </div>
-                            </div>
-                            <div className="flex-grow-1 ms-3">
-                              <h6 className="fs-14 mb-0 fw-semibold">
-                                Delivered
-                              </h6>
-                            </div>
-                          </div>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <ul className="list-unstyled vstack gap-2 fs-14 mb-0">
+                  <li className="fw-semibold fs-15">
+                    {company ? companyData.name : "Company Name not available"}
+                  </li>
+                  <li>{company ? companyData.phone : "Company phone not available"}</li>
+                  <li>{company.address ? companyData.address.street : "adress street not available"}</li>
+                  <li>{company.address ? companyData.address.city+` ${companyData.address.zip}` : "adress city not available"}</li>
+                  <li>{company.address ? companyData.address.country : "adress country not available"}</li>
+                </ul>
               </CardBody>
             </Card>
           </Col>
+
 
           <Col xl={3}>
             <Card>
               <CardHeader>
                 <div className="d-flex">
                   <h5 className="card-title flex-grow-1 mb-0">
-                    <i className="mdi mdi-truck-fast-outline align-middle me-1 text-muted"></i> Logistics Details
+                    <i className="mdi mdi-truck-fast-outline align-middle me-1 text-muted"></i> Company Details
                   </h5>
-                  <div className="flex-shrink-0">
-                    <Link to="#" className="badge bg-primary-subtle text-primary fs-12">
+                  {/*<div className="flex-shrink-0">
+                    <div  className="badge bg-primary-subtle text-primary fs-12">
                       Track Order
-                    </Link>
-                  </div>
+                    </div>
+                      </div>*/}
                 </div>
               </CardHeader>
               <CardBody>
                 <div className="text-center">
-                <i className="ri-truck-line display-5 text-danger"></i>
-                  <h5 className="fs-16 mt-2">RQK Logistics</h5>
-                  <p className="text-muted mb-0">ID: MFDS1400457854</p>
-                  <p className="text-muted mb-0">Payment Mode : Debit Card</p>
+                
+                <img
+                        src={company && company.logo ? `http://localhost:3001${company.logo}` : avatar3} 
+                        alt="Company logo"
+                        className="display-5avatar-xl rounded"
+                      />
+                  <h5 className="fs-16 mt-2">{company.name ? company.name : "Company Name not available"}</h5>
+                  <p className="text-muted mb-0">ID: {company._id ? company._id : "ID not available"}</p>
+                  <p className="text-muted mb-0">Description : {company.description ? company.description : "Description not available"}</p>
+                  
+                      {company?.isPaid ? (
+                        <div className="flex-shrink-0 ms-2">
+                          
+                          <div className="badge bg-success text-white fs-15">
+                          Paid
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex-shrink-0 ms-2">
+                          <div className="badge bg-danger text-white fs-15">
+                            Not Paid
+                          </div>
+                        </div>
+                      )}
+                   
+
+                  
                 </div>
               </CardBody>
             </Card>
+            
 
             <Card>
               <CardHeader>
                 <div className="d-flex">
                   <h5 className="card-title flex-grow-1 mb-0">
-                    Customer Details
+                  {Agent ? Agent.role : "Role not available"} Details
                   </h5>
                   <div className="flex-shrink-0">
                     <Link to="#" className="link-secondary">
@@ -399,116 +445,76 @@ const EcommerceOrderDetail = (props:any) => {
                   <li>
                     <div className="d-flex align-items-center">
                       <div className="flex-shrink-0">
-                        <img
-                          src={avatar3}
-                          alt=""
-                          className="avatar-sm rounded"
-                        />
+                      <img
+                        src={company.agent && company.agent.avatar ? `http://localhost:3001${company.agent.avatar}` : avatar3}
+                        alt="Agent Avatar"
+                        className="avatar-sm rounded"
+                      />
+
                       </div>
                       <div className="flex-grow-1 ms-3">
-                        <h6 className="fs-15 mb-1">Joseph Parkers</h6>
-                        <p className="text-muted mb-0">Customer</p>
+                      <h5 className="fs-16 mb-1">
+                        {company.agent ? `${company.agent.firstname} ${company.agent.lastname}` : "FirstName not available LastName not available"}
+                      </h5>
+
+                      <p className="text-muted mb-0">{company.agent ? company.agent.role : "Role not available"}</p>
                       </div>
                     </div>
                   </li>
                   <li>
                     <i className="ri-mail-line me-2 align-middle text-muted fs-16"></i>
-                    josephparker@gmail.com
+                    {company.agent ? company.agent.email : "Email not available"}
                   </li>
                   <li>
                     <i className="ri-phone-line me-2 align-middle text-muted fs-16"></i>
-                    +(256) 245451 441
+                    {company.agent ? company.agent.phoneNumber : "Phone Number not available"}
                   </li>
                 </ul>
               </CardBody>
             </Card>
 
+            
+
+            
             <Card>
               <CardHeader>
                 <h5 className="card-title mb-0">
-                  <i className="ri-map-pin-line align-middle me-1 text-muted"></i>{" "}
-                  Billing Address
+                  <i className="ri-apps-fill align-bottom me-1 text-muted"></i>{" "}
+                  Social Media Details
                 </h5>
               </CardHeader>
               <CardBody>
-                <ul className="list-unstyled vstack gap-2 fs-14 mb-0">
-                  <li className="fw-semibold fs-15">Joseph Parker</li>
-                  <li>+(256) 245451 451</li>
-                  <li>2186 Joyce Street Rocky Mount</li>
-                  <li>New York - 25645</li>
-                  <li>United States</li>
-                </ul>
+                
+                <div className="d-flex align-items-center mb-2">
+                  <div className="flex-shrink-0">
+                    <p className="text-muted mb-0"><i className="ri-facebook-circle-fill fs-24"></i></p>
+                  </div>
+                  <div className="flex-grow-1 ms-2">
+                    <h6 className="mb-0">
+                      <Link to={company.socialMedia ? company.socialMedia.facebook : "#"} className="link-secondary">
+                        {company.socialMedia ? company.socialMedia.facebook : "facebook not available"}
+                      </Link>
+                    </h6>
+                  </div>
+                </div>
+                
+                
+                <div className="d-flex align-items-center mb-2">
+                  <div className="flex-shrink-0">
+                    <p className="text-muted mb-0"><i className="ri-instagram-fill fs-24"></i></p>
+                  </div>
+                  <div className="flex-grow-1 ms-2">
+                    <h6 className="mb-0">
+                      <Link to={company.socialMedia ? company.socialMedia.instagram : "#" } className="link-secondary">
+                        {company.socialMedia ? company.socialMedia.instagram : "instagram not available"}
+                      </Link>
+                    </h6>
+                  </div>
+                </div>
               </CardBody>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <h5 className="card-title mb-0">
-                  <i className="ri-map-pin-line align-middle me-1 text-muted"></i>{" "}
-                  Shipping Address
-                </h5>
-              </CardHeader>
-              <CardBody>
-                <ul className="list-unstyled vstack gap-2 fs-14 mb-0">
-                  <li className="fw-semibold fs-15">Joseph Parker</li>
-                  <li>+(256) 245451 451</li>
-                  <li>2186 Joyce Street Rocky Mount</li>
-                  <li>California - 24567</li>
-                  <li>United States</li>
-                </ul>
-              </CardBody>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <h5 className="card-title mb-0">
-                  <i className="ri-secure-payment-line align-bottom me-1 text-muted"></i>{" "}
-                  Payment Details
-                </h5>
-              </CardHeader>
-              <CardBody>
-                <div className="d-flex align-items-center mb-2">
-                  <div className="flex-shrink-0">
-                    <p className="text-muted mb-0">Transactions:</p>
-                  </div>
-                  <div className="flex-grow-1 ms-2">
-                    <h6 className="mb-0">#VLZ124561278124</h6>
-                  </div>
-                </div>
-                <div className="d-flex align-items-center mb-2">
-                  <div className="flex-shrink-0">
-                    <p className="text-muted mb-0">Payment Method:</p>
-                  </div>
-                  <div className="flex-grow-1 ms-2">
-                    <h6 className="mb-0">Debit Card</h6>
-                  </div>
-                </div>
-                <div className="d-flex align-items-center mb-2">
-                  <div className="flex-shrink-0">
-                    <p className="text-muted mb-0">Card Holder Name:</p>
-                  </div>
-                  <div className="flex-grow-1 ms-2">
-                    <h6 className="mb-0">Joseph Parker</h6>
-                  </div>
-                </div>
-                <div className="d-flex align-items-center mb-2">
-                  <div className="flex-shrink-0">
-                    <p className="text-muted mb-0">Card Number:</p>
-                  </div>
-                  <div className="flex-grow-1 ms-2">
-                    <h6 className="mb-0">xxxx xxxx xxxx 2456</h6>
-                  </div>
-                </div>
-                <div className="d-flex align-items-center">
-                  <div className="flex-shrink-0">
-                    <p className="text-muted mb-0">Total Amount:</p>
-                  </div>
-                  <div className="flex-grow-1 ms-2">
-                    <h6 className="mb-0">$415.96</h6>
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
+            
           </Col>
         </Row>
       </Container>
