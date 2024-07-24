@@ -65,6 +65,11 @@ export const postJwtRegister = (url: string, data: any) => {
 
 */
 export const addNewCompanyApi = (company : any) => api.createWithImage(url.ADD_NEW_COMPANY, company); //, product
+export const addProductApi = (product : any) => api.createWithImage(url.ADD_PRODUCT, product); //, product
+
+export const updateProductApi = (product : any , id:String) => api.updateWithImage(url.UPDATE_PRODUCT+"/"+id, product); //, product
+
+
 
 export const getCompanies = async () => {
   
@@ -75,6 +80,56 @@ console.log(response);
 return response
 
 };
+export const getProductsApi = async () => {
+  
+  
+  let response =  await  customAxios.get(url.GET_PRODUCTSS)
+  console.log(response);
+  
+  return response
+  
+  };
+  export const getOneProductApi = async (product:string) => {
+  
+  
+    let response =  await  customAxios.get(url.GET_ONE_PRODUCT+"/"+product)
+    console.log(response);
+    
+    return response
+    
+    };
+  
+export const getCategoriesAPI = async () => {
+  
+  
+  let response =  await  customAxios.get(url.GET_CATEGORIES)
+  console.log(response);
+  
+  return response
+  
+  };
+  export const getAttributsAPI = async () => {
+  
+  
+    let response =  await  customAxios.get(url.GET_ATTRIBUTS)
+    console.log(response);
+    
+    return response
+    
+    };
+  
+  
+  
+  export const getSubCategoriesAPI = async () => {
+  
+  
+    let response =  await  customAxios.get(url.GET_SUBCATEGORIES)
+    console.log(response);
+    
+    return response
+    
+    };
+    
 
 export const addCategoryApi = async (data:any) => {
   
@@ -91,6 +146,85 @@ export const addCategoryApi = async (data:any) => {
   }
   
   };
+
+  export const de = async (data:any) => {
+  
+    console.log(data);
+    try{
+      let response =  await  customAxios.post(url.ADD_CATEGORY,{data})
+      console.log(response);
+      return response
+  
+  
+    }catch(err){
+      console.log(err);
+      
+    }
+    
+    };
+   
+  export const addAttributApi = async (data:any) => {
+  
+    console.log(data);
+    try{
+      console.log(data);
+      
+      let response =  await  customAxios.post(url.ADD_ATTRIBUT,data)
+      console.log(response);
+      return response
+  
+  
+    }catch(err){
+      console.log(err);
+      
+    }
+    
+    };
+  export const addSubCategoryApi = async (data:any) => {
+  
+    console.log(data);
+    try{
+      let response =  await  customAxios.post(url.ADD_SUBCATEGORY,{data})
+      console.log(response);
+      return response
+  
+  
+    }catch(err){
+      console.log(err);
+      
+    }
+    
+    };
+    export const deleteProducts = async (data:any) => {
+  
+      console.log(data);
+      try{
+        let response =  await  customAxios.delete(url.DELETE_PRODUCT+"/"+data)
+        console.log(response);
+        return response
+    
+    
+      }catch(err){
+        console.log(err);
+        
+      }
+      
+      };
+
+
+      export const deleteCompanieAPI = async (data:any) => {
+        try{
+          let response =  await  customAxios.delete(url.DELETE_COMPANY+"/"+data)
+          console.log(response);
+          return response
+        }catch(err){
+          console.log(err);
+          
+        }
+        
+        };
+
+      
   
 
 export const getOneCompanyApi = async (id : any) => {
@@ -172,14 +306,13 @@ export const trashMail = (forId: any) => api.delete(url.TRASH_MAIL, { headers: {
 export const getProducts = () => api.get(url.GET_PRODUCTS);
 
 // delete Product
-export const deleteProducts = (product : any) => api.delete(url.DELETE_PRODUCT, { headers: { product } } );  // + '/' + product
 
 // add Products
 export const addNewProduct = (product : any) => api.create(url.ADD_NEW_PRODUCT, product); //, product
 
 // add 
 // update Products
-export const updateProduct = (product : any) => api.update(url.UPDATE_PRODUCT, product ); // + '/' + product._id, product
+export const updateProduct = (product : any,id:string) => api.update(url.UPDATE_PRODUCT+"/"+id, product ); // + '/' + product._id, product
 
 // get Orders
 export const getOrders = () => api.get(url.GET_ORDERS);
@@ -192,7 +325,7 @@ export const updateOrder = (order : any) => api.update(url.UPDATE_ORDER, order);
 
 // delete Order
 export const deleteOrder = (order : any) => api.delete(url.DELETE_ORDER , { headers: { order } });
-
+export const updateCompany1 = (company : any,id:string) => api.updateWithImage  (url.UPDATE_COMPANIES+"/"+id, company);
 // get Customers
 export const getCustomers = () => api.get(url.GET_CUSTOMERS);
 

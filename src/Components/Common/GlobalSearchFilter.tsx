@@ -154,43 +154,7 @@ const OrderGlobalFilter = () => {
                 </div>
             </Col>
 
-            <Col sm={4} className="col-xxl-2">
-                <div>
-                    <Select
-                        value={orderStatus}
-                        onChange={
-                            handleorderStatus
-                        }
-                        options={orderstatus}
-                        name="choices-single-default"
-                        id="idStatus"
-                    ></Select>
-                </div>
-            </Col>
-
-            <Col sm={4} className="col-xxl-2">
-                <div>
-                    <Select
-                        value={orderPayement}
-                        onChange={
-                            handleorderPayement
-                        }
-                        options={orderpayement}
-                        name="choices-payment-default"
-                        id="idPayment"
-                    ></Select>
-                </div>
-            </Col>
-
-            <Col sm={4} className="col-xxl-1">
-                <div>
-                    <button type="button" className="btn btn-primary w-100">
-                        {" "}
-                        <i className="ri-equalizer-fill me-1 align-bottom"></i>
-                        Filters
-                    </button>
-                </div>
-            </Col>
+          
         </React.Fragment>
     );
 };

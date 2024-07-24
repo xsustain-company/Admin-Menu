@@ -26,7 +26,7 @@ import BreadCrumb from "../../../Components/Common/BreadCrumb";
 import TableContainer from "../../../Components/Common/TableContainer";
 import DeleteModal from "../../../Components/Common/DeleteModal";
 import { isEmpty } from "lodash";
-import { getCategoriess , getSubCategoriess, getCompaniess } from "slices/companies/thunk";
+import { getCategoriess , getSubCategoriess, getCompaniess, getAttributs } from "slices/companies/thunk";
 import Select from "react-select";
 
 // Export Modal
@@ -52,29 +52,23 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { createSelector } from "reselect";
 import moment from "moment";
-import { addCategoryApi, addSubCategoryApi } from "helpers/fakebackend_helper";
+import { addAttributApi, addCategoryApi, addSubCategoryApi } from "helpers/fakebackend_helper";
 
-const EcommerceOrders = () => {
-
+const AttributsManagement = () => {
+  const [order, setOrder] = useState<any>([]);
+  const [category, setCategory] = useState<any>([]);
   const [modal, setModal] = useState<boolean>(false);
   const [modalView, setModalView] = useState<boolean>(false);
   const [modalAddSubCategorie, setModalAddSubCategorie] = useState<boolean>(false);
   const [isAddSubCategorie,setIsAddSubCategorie] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState("1");
 
   const dispatch: any = useDispatch();
   const slectedCompanies = createSelector(
     (state: any) => state.Companies,
-    (Companies) => Companies.categories
-  );
-  const slectedSubCategories = createSelector(
-    (state: any) => state.Companies,
-    (Companies) => Companies.subCategories
+    (Companies) => Companies.attributs
   );
   // Inside your component
   const companies = useSelector(slectedCompanies);
-  const subCategoriess = useSelector(slectedSubCategories)
-  const [companiesLIst, setCompaniesList] = useState<any>([]);
 
   const selectLayoutState = (state: any) => state.Ecommerce;
   const selectLayoutProperties = createSelector(
@@ -85,112 +79,31 @@ const EcommerceOrders = () => {
       error: ecom.error,
     })
   );
-  
-  useEffect(() => {
-    console.log(subCategoriess);
+  useEffect(()=>{
+    dispatch(getAttributs())
+  },[])
+
+  const selectedAttributes = createSelector(
+    (state: any) => state.Companies,
+    (attributes) => attributes.attributs
+  );
+  // Inside your component
+  const attributes = useSelector(selectedAttributes);
+  useEffect(()=>{
+    console.log(attributes);
     
-    if (subCategoriess && !subCategoriess.length) {
-      dispatch(getSubCategoriess());
-      let data = subCategories.map((item:any) => ({
-        value: item._id,
-        label: item.name,
-      }))
-      console.log(data);
-      
-     // setFormatedOptions()
-    }
-
-  }, [dispatch, subCategoriess]);
-  
-
-  useEffect(() => {
-    if (companies && !companies.length) {
-      dispatch(getCategoriess());
-    }
-  }, [dispatch, companies]);
-
-
+  },[attributes])
 
   // Inside your component
   const {
     orders, isOrderSuccess, error
   } = useSelector(selectLayoutProperties);
-  const [orderList, setOrderList] = useState<any>([]);
-  const [order, setOrder] = useState<any>([]);
-  const [category, setCategory] = useState<any>([]);
+  
 
-  const orderstatus = [
-    {
-      options: [
-        { label: "Status", value: "Status" },
-        { label: "All", value: "All" },
-        { label: "Pending", value: "Pending" },
-        { label: "Inprogress", value: "Inprogress" },
-        { label: "Cancelled", value: "Cancelled" },
-        { label: "Pickups", value: "Pickups" },
-        { label: "Returns", value: "Returns" },
-        { label: "Delivered", value: "Delivered" },
-      ],
-    },
-  ];
-
-  const orderpayement = [
-    {
-      options: [
-        { label: "Select Payment", value: "Select Payment" },
-        { label: "All", value: "All" },
-        { label: "Mastercard", value: "Mastercard" },
-        { label: "Paypal", value: "Paypal" },
-        { label: "Visa", value: "Visa" },
-        { label: "COD", value: "COD" },
-      ],
-    },
-  ];
-
-  const productname = [
-    {
-      options: [
-        { label: "Product", value: "Product" },
-        { label: "Puma Tshirt", value: "Puma Tshirt" },
-        { label: "Adidas Sneakers", value: "Adidas Sneakers" },
-        {
-          label: "350 ml Glass Grocery Container",
-          value: "350 ml Glass Grocery Container",
-        },
-        {
-          label: "American egale outfitters Shirt",
-          value: "American egale outfitters Shirt",
-        },
-        { label: "Galaxy Watch4", value: "Galaxy Watch4" },
-        { label: "Apple iPhone 12", value: "Apple iPhone 12" },
-        { label: "Funky Prints T-shirt", value: "Funky Prints T-shirt" },
-        {
-          label: "USB Flash Drive Personalized with 3D Print",
-          value: "USB Flash Drive Personalized with 3D Print",
-        },
-        {
-          label: "Oxford Button-Down Shirt",
-          value: "Oxford Button-Down Shirt",
-        },
-        {
-          label: "Classic Short Sleeve Shirt",
-          value: "Classic Short Sleeve Shirt",
-        },
-        {
-          label: "Half Sleeve T-Shirts (Blue)",
-          value: "Half Sleeve T-Shirts (Blue)",
-        },
-        { label: "Noise Evolve Smartwatch", value: "Noise Evolve Smartwatch" },
-      ],
-    },
-  ];
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [createSubCategorie, setIsCreateSubCategorie] = useState<boolean>(false);
   
   
-  const [isView, setIsView] = useState<boolean>(false);
-  const [subCatFields, setSubCategoriesField] = useState<string[]>([]);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
   const [subCategories, setSubCategories] = useState<any>([]);
@@ -212,37 +125,7 @@ const EcommerceOrders = () => {
     }
   };
 
-  useEffect(() => {
-    setCompaniesList(companies);
-  }, [companies]);
 
-  useEffect(() => {
-    if (!isEmpty(companies)) setCompaniesList(companies);
-  }, [companies]);
-
-  const toggleTab = (tab: any, type: any) => {
-    if (activeTab !== tab) {
-      setActiveTab(tab);
-      let filteredOrders = orders;
-      if (type !== "all") {
-        filteredOrders = orders.filter((order: any) => order.status === type);
-      }
-      setOrderList(filteredOrders);
-    }
-  };
-  useEffect(() => {
-    console.log();
-    
-    let data = subCategoriess.map((item:any) => ({
-      value: item._id,
-      label: item.name,
-    }))
-    console.log(data);
-    
-   setFormatedOptions(data)
-  
-
-}, [subCategoriess]);
   // validation
   const validation: any = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -250,6 +133,7 @@ const EcommerceOrders = () => {
 
     initialValues: {
       name:'',
+      description :"",
       orderId: (order && order.orderId) || '',
       customer: (order && order.customer) || '',
       product: (order && order.product) || '',
@@ -257,6 +141,7 @@ const EcommerceOrders = () => {
       amount: (order && order.amount) || '',
       payment: (order && order.payment) || '',
       status: (order && order.status) || '',
+
     },
     validationSchema: Yup.object({
      /* orderId: Yup.string().required("Please Enter order Id"),
@@ -268,54 +153,26 @@ const EcommerceOrders = () => {
       status: Yup.string().required("Please Enter Delivery Status")*/
     }),
     onSubmit:async (values) => {
-      if(isAddSubCategorie){
-        const data ={
-          name:values["name"],
-        }
-        try{
-          const  response = await addSubCategoryApi(data);
 
-          toast.success("sub category added")
-          return ;
-          dispatch(getCategoriess())
-        }catch(error){
-          toast.error("categorie failed ")
-        }
-
-      }
-      if (isEdit) {
-        const updateOrder = {
-          id: order ? order.id : 0,
-          orderId: values.orderId,
-          customer: values.customer,
-          product: values.product,
-          orderDate: values.orderDate,
-          amount: values.amount,
-          payment: values.payment,
-          status: values.status
-        };
-        // update order
-        dispatch(onUpdateOrder(updateOrder));
-        validation.resetForm();
-      } else {
-        console.log(subCategoriesToAdd);
+     
         
-        const newCategory = {
-          subCategories : subCategoriesToAdd,
+        const newAttribut = {
           name: values["name"],
+          description: values["description"],
+
          
         };
         try{
-          const  response = await addCategoryApi(newCategory);
+          const  response = await addAttributApi(newAttribut);
 
-          toast.success("category added")
-          dispatch(getCategoriess())
+          toast.success("Attribut added")
+          dispatch(getAttributs())
         }catch(error){
-          toast.error("categorie failed ")
+          toast.error("Attribut failed ")
         }
        
         validation.resetForm();
-      }
+  
       toggle();
     },
   });
@@ -465,7 +322,7 @@ const EcommerceOrders = () => {
         enableSorting: false,
       },
       {
-        header: "Categorie Id",
+        header: "attribut Id",
         accessorKey: "_id",
         enableColumnFilter: false,
         cell: (cell: any) => {
@@ -473,7 +330,7 @@ const EcommerceOrders = () => {
         },
       },
       {
-        header: "Category Name",
+        header: "attribut Name",
         accessorKey: "name",
         enableColumnFilter: false,
       },
@@ -597,7 +454,7 @@ const EcommerceOrders = () => {
               <CardHeader className="card-header border-0">
                 <Row className="align-items-center gy-3">
                   <div className="col-sm">
-                    <h5 className="card-title mb-0">Categories </h5>
+                    <h5 className="card-title mb-0">Attributs </h5>
                   </div>
                   <div className="col-sm-auto">
                     <div className="d-flex gap-1 flex-wrap">
@@ -608,29 +465,13 @@ const EcommerceOrders = () => {
                         onClick={() => { setIsEdit(false); toggle(); }}
                       >
                         <i className="ri-add-line align-bottom me-1"></i> Create
-                        Category
+                        Attribut
                       </button>
-                      <button
-                        type="button"
-                        className="btn btn-success add-btn"
-                        id="create-btn"
-                        onClick={() => { setIsCreateSubCategorie(false); toggleAddSubCategorie(); }}
-                      >
-                        <i className="ri-add-line align-bottom me-1"></i> Create
-                        Sub Category
-                      </button>
+                     
                       
                       
-                      {" "}
-                      <button type="button" className="btn btn-info" onClick={() => setIsExportCSV(true)}>
-                        <i className="ri-file-download-line align-bottom me-1"></i>{" "}
-                        Import
-                      </button>
-                      {" "}
-                      {isMultiDeleteButton && <button className="btn btn-soft-danger"
-                        onClick={() => setDeleteModalMulti(true)}
-                      ><i
-                        className="ri-delete-bin-2-line"></i></button>}
+                    
+                      
                     </div>
                   </div>
                 </Row>
@@ -638,84 +479,12 @@ const EcommerceOrders = () => {
 
               <CardBody className="pt-0">
                 <div>
-                  <Nav
-                    className="nav-tabs nav-tabs-custom nav-success"
-                    role="tablist"
-                  >
-                    <NavItem>
-                      <NavLink
-                        className={classnames(
-                          { active: activeTab === "1" })}
-                        onClick={() => {
-                          toggleTab("1", "all");
-                        }}
-                        href="#"
-                      >
-                        <i className="ri-store-2-fill me-1 align-bottom"></i>{" "}
-                        All Categories
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink
-                        className={classnames(
-                          { active: activeTab === "2" })}
-                        onClick={() => {
-                          toggleTab("2", "Delivered");
-                        }}
-                        href="#"
-                      >
-                        <i className="ri-checkbox-circle-line me-1 align-bottom"></i>{" "}
-                        Delivered
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink
-                        className={classnames(
-                          { active: activeTab === "3" })}
-                        onClick={() => {
-                          toggleTab("3", "Pickups");
-                        }}
-                        href="#"
-                      >
-                        <i className="ri-truck-line me-1 align-bottom"></i>{" "}
-                        Pickups{" "}
-                        <span className="badge bg-danger align-middle ms-1">
-                          2
-                        </span>
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink
-                        className={classnames(
-                          { active: activeTab === "4" })}
-                        onClick={() => {
-                          toggleTab("4", "Returns");
-                        }}
-                        href="#"
-                      >
-                        <i className="ri-arrow-left-right-fill me-1 align-bottom"></i>{" "}
-                        Returns
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink
-                        className={classnames(
-                          { active: activeTab === "5" })}
-                        onClick={() => {
-                          toggleTab("5", "Cancelled");
-                        }}
-                        href="#"
-                      >
-                        <i className="ri-close-circle-line me-1 align-bottom"></i>{" "}
-                        Cancelled
-                      </NavLink>
-                    </NavItem>
-                  </Nav>
+                 
 
-                  {companies.length ? (
+                  {attributes.length>=0 ? (
                     <TableContainer
                       columns={columns}
-                      data={(companies || [])}
+                      data={(attributes || [])}
                       isGlobalFilter={true}
                       customPageSize={8}
                       divClass="table-responsive table-card mb-1 mt-0"
@@ -746,13 +515,13 @@ const EcommerceOrders = () => {
                           htmlFor="customername-field"
                           className="form-label"
                         >
-                          Category Name
+                          Attribut Name
                         </Label>
                         <Input
                           name="name"
                           id="name"
                           className="form-control"
-                          placeholder="Enter Category Name"
+                          placeholder="Enter Attribut Name"
                           type="text"
                           validate={{
                             required: { value: true },
@@ -769,18 +538,26 @@ const EcommerceOrders = () => {
                         ) : null}
                         <br></br>
                         <Col md="12">
-                <Label>Sous-Categories</Label>
-                <Select
-                            value={selectedMulti3}
-                            isMulti={true}
-                            onChange={(selectedMulti3: any) => {
-                              handleMulti3(selectedMulti3);
-                            }}
-                            options={formatedOptions}
-
-                            closeMenuOnSelect={false}
-                            components={animatedComponents}
-                          />
+                <Label>Description</Label>
+                <Input
+                          name="description"
+                          id="description"
+                          className="form-control"
+                          placeholder="Enter Attribut description"
+                          type="text"
+                          validate={{
+                            required: { value: true },
+                          }}
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.description || ""}
+                          invalid={
+                            validation.touched.description && validation.errors.description ? true : false
+                          }
+                        />
+                        {validation.touched.description && validation.errors.description ? (
+                          <FormFeedback type="invalid">{validation.errors.description}</FormFeedback>
+                        ) : null}
                
               </Col>
 
@@ -941,4 +718,4 @@ const EcommerceOrders = () => {
   );
 };
 
-export default EcommerceOrders;
+export default AttributsManagement;

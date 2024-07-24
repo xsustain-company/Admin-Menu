@@ -18,7 +18,10 @@ import {
   addNewProduct as addNewProductApi,
   updateProduct as updateProductApi,
   addNewCompanyApi,
-  getCompanies
+  getCompanies,
+  addProductApi,
+  deleteCompanieAPI,
+  updateCompany1
 } from "../../helpers/fakebackend_helper";
 
 export const getProducts = createAsyncThunk("ecommerce/getProducts", async () => {
@@ -58,6 +61,23 @@ export const getCustomers = createAsyncThunk("ecommerce/getCustomers", async () 
     return error;
   }
 });
+export const updateCompanies1 = createAsyncThunk("ecommerce/updateCompany", async (company : any) => {
+  try {
+    console.log("Commpaanyy : " , company);
+    const response =await updateCompany1(company.formData ,company.id );
+    console.log("Dataaaaaaaaaa :",response);
+    toast.success("Company Updateded Successfully", { autoClose: 3000 });
+    return response;
+  } catch (error) {
+    toast.error("Company Updateded Failed", { autoClose: 3000 });
+    return error;
+  }
+});
+
+
+
+
+
 
 export const deleteProducts = createAsyncThunk("ecommerce/deleteProducts", async (product:any) => {
   try {
@@ -69,6 +89,21 @@ export const deleteProducts = createAsyncThunk("ecommerce/deleteProducts", async
     return error;
   }
 });
+
+export const deleteCompanie = createAsyncThunk("ecommerce/deleteCompanie", async (product:any) => {
+  try {
+    const response = deleteCompanieAPI(product);
+    toast.success("Product Delete Successfully", { autoClose: 3000 });
+    return { product, ...response };
+  } catch (error) {
+    toast.error("Product Delete Failed", { autoClose: 3000 });
+    return error;
+  }
+});
+
+
+
+
 
 export const updateOrder = createAsyncThunk("ecommerce/updateOrder", async (order:any) => {
   try {
@@ -105,13 +140,28 @@ export const addNewCompany = createAsyncThunk("ecommerce/addNewCompany", async (
   }
 });
 
+export const addProduct = createAsyncThunk("ecommerce/addProduct", async (company:any) => {
+  try {
+    const response = addProductApi(company);
+    const data = await response;
+    toast.success("Product Added Successfully", { autoClose: 3000 });
+    return data;
+  } catch (error) {
+    toast.error("Company Added Failed", { autoClose: 3000 });
+    return error;
+  }
+});
+
+
+
+
 
 export const updateProduct = createAsyncThunk("ecommerce/updateProduct", async (product:any) => {
   try {
-    const response = updateProductApi(product);
-    const data = await response;
+   // const response = updateProductApi(product);
+  //  const data = await response;
     toast.success("Product Updateded Successfully", { autoClose: 3000 });
-    return data;
+    return null;
   }
   catch (error) {
     toast.error("Product Updateded Failed", { autoClose: 3000 });

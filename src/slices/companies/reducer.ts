@@ -1,10 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getCompaniess, getOneCompany , addCategories } from './thunk';
+import { getCompaniess, getOneCompany , addCategories, getCategoriess, getSubCategoriess, getAttributs, getProductss, getOneProductss } from './thunk';
+import { categories } from "common/data/jobLanding";
 export const initialState :any= {
   companies:[],
   products: [],
-  oneCompany:[],
+  oneProduct: [],
 
+  oneCompany:[],
+  categories : [],
+  attributs:[],
+  subCategories:[],
   orders: [],
   sellers: [],
   customers: [],
@@ -48,11 +53,61 @@ const CompaniesSlice = createSlice({
     builder.addCase(getOneCompany.rejected, (state:any, action:any) => {
       state.error = action.payload.error || null;
     });
+    builder.addCase(getCategoriess.fulfilled, (state:any, action:any) => {
+      console.log(action.payload);
+      
+      state.categories = action.payload.data; 
+    });
 
+    builder.addCase(getCategoriess.rejected, (state:any, action:any) => {
+      state.error = action.payload.error || null;
+    });
+
+    builder.addCase(getSubCategoriess.fulfilled, (state:any, action:any) => {
+      console.log(action.payload);
+      
+      state.subCategories = action.payload.data; 
+    });
+
+    builder.addCase(getSubCategoriess.rejected, (state:any, action:any) => {
+      state.error = action.payload.error || null;
+    });
+
+
+    builder.addCase(getAttributs.fulfilled, (state:any, action:any) => {
+      console.log(action.payload);
+      
+      state.attributs = action.payload.data; 
+    });
+
+    builder.addCase(getAttributs.rejected, (state:any, action:any) => {
+      state.error = action.payload.error || null;
+    });
+
+
+    builder.addCase(getProductss.fulfilled, (state:any, action:any) => {
+      console.log(action.payload);
+      
+      state.products = action.payload.data; 
+    });
+
+    builder.addCase(getProductss.rejected, (state:any, action:any) => {
+      state.error = action.payload.error || null;
+    });
+    builder.addCase(getOneProductss.fulfilled, (state:any, action:any) => {
+      console.log(action.payload);
+      
+      state.oneProduct = action.payload.data; 
+    });
+
+    builder.addCase(getOneProductss.rejected, (state:any, action:any) => {
+      state.error = action.payload.error || null;
+    });
+    
 
     
-  
-
+    
+    
 
 
   }

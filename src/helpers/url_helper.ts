@@ -2,9 +2,27 @@
 export const POST_FAKE_REGISTER = "/auth/signup";
 // add company 
 export const ADD_NEW_COMPANY = "/company/create";
+export const ADD_PRODUCT = "/product/create";
+
+export const ADD_ATTRIBUT = "/attributs/create";
+
+export const GET_ATTRIBUTS = "/attributs/listAll";
+export const DELETE_COMPANY = "/company/delete";
+
+
 export const GET_COMPANIES = "/company/listAll";
+export const GET_PRODUCTSS = "/product/listAll";
+
+export const GET_ONE_PRODUCT = "/product/getOne";
+
+
+export const GET_CATEGORIES = "/category/listAll";
+export const GET_SUBCATEGORIES = "/subcategory/listAll";
+
 export const GET_COMPANY = "/company/getOne"
 export const ADD_CATEGORY = "/category/create";
+export const ADD_SUBCATEGORY = "/subcategory/create";
+
 
 //
 
@@ -21,7 +39,6 @@ export const POST_EDIT_PROFILE = "/user";
 
 // Calendar
 export const GET_EVENTS = "/events";
-export const GET_CATEGORIES = "/categories";
 export const GET_UPCOMMINGEVENT = "/upcommingevents";
 export const ADD_NEW_EVENT = "/add/event";
 export const UPDATE_EVENT = "/update/event";
@@ -45,9 +62,9 @@ export const TRASH_MAIL = "/trash/mail";
 // Ecommerce
 // Product
 export const GET_PRODUCTS = "/apps/product";
-export const DELETE_PRODUCT = "/apps/product";
+export const DELETE_PRODUCT = "/product/delete";
 export const ADD_NEW_PRODUCT = "/review/create";
-export const UPDATE_PRODUCT = "/apps/product";
+export const UPDATE_PRODUCT = "/product/update";
 
 // Orders
 export const GET_ORDERS = "/apps/order";

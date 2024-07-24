@@ -58,9 +58,8 @@ import TicketsDetails from '../pages/SupportTickets/TicketsDetails';
 // //Ecommerce Pages
 import EcommerceProducts from "../pages/Ecommerce/EcommerceProducts/index";
 import EcommerceProductDetail from "../pages/Ecommerce/EcommerceProducts/EcommerceProductDetail";
-import EcommerceAddProduct from "../pages/Ecommerce/EcommerceProducts/EcommerceAddProduct";
-import EcommerceOrders from "../pages/Ecommerce/EcommerceOrders/index";
-import EcommerceOrderDetail from "../pages/Ecommerce/EcommerceOrders/EcommerceOrderDetail";
+import AddCompany from "../pages/Ecommerce/Companies/AddCompany";
+import AllCompanies from "../pages/Ecommerce/Companies/index";
 import EcommerceCustomers from "../pages/Ecommerce/EcommerceCustomers/index";
 import EcommerceCart from "../pages/Ecommerce/EcommerceCart";
 import EcommerceCheckout from "../pages/Ecommerce/EcommerceCheckout";
@@ -241,8 +240,28 @@ import UiLink from "../pages/BaseUi/UiLinks/UiLinks";
 import PrivacyPolicy from "pages/Pages/PrivacyPolicy";
 import Kanbanboard from "pages/Tasks/KanbanBoard";
 import CategoriesDetails from "pages/Ecommerce/Categories/";
+import CreateProduct from "pages/Ecommerce/Products/EcommerceAddProduct";
+import AttributsManagement from "pages/Ecommerce/attributs";
+import AllProducts from "pages/Ecommerce/Products";
+import UpdateProduct from "pages/Ecommerce/Products/updateProduct";
+import ViewCompany from "pages/Ecommerce/Companies/viewCompany";
+import EditCompany from "pages/Ecommerce/Companies/editCompany";
 
-const authProtectedRoutes = [
+const authProtectedRoutes = [  
+  // refactored
+  { path: "/companies", component: <AllCompanies /> }, // done +-
+  { path: "/createCompany", component: <AddCompany /> },// done +-
+  { path: "/viewCompany", component: <ViewCompany /> },// done +-
+  { path: "/editCompany", component: <EditCompany /> },// done +-
+
+  //still not 
+  { path: "/createProduct", component: <CreateProduct /> },
+  { path: "/allProducts", component: <AllProducts /> },
+  { path: "/UpdateProduct", component: <UpdateProduct /> },
+
+  
+  { path: "/attributsManagement", component: <AttributsManagement /> },
+                                                 
   { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
   { path: "/dashboard-crm", component: <DashboardCrm /> },
   { path: "/dashboard", component: <DashboardEcommerce /> },
@@ -255,11 +274,8 @@ const authProtectedRoutes = [
   { path: "/apps-calendar-month-grid", component: <MonthGrid /> },
   { path: "/apps-ecommerce-products", component: <EcommerceProducts /> },
   { path: "/apps-ecommerce-product-details", component: <EcommerceProductDetail /> },
-  { path: "/apps-ecommerce-add-product", component: <EcommerceAddProduct /> },
-  { path: "/apps-ecommerce-orders", component: <EcommerceOrders /> },
   { path: "/categories&subCategories", component: <CategoriesDetails /> },
 
-  { path: "/apps-ecommerce-order-details", component: <EcommerceOrderDetail /> },
   { path: "/apps-ecommerce-customers", component: <EcommerceCustomers /> },
   { path: "/apps-ecommerce-cart", component: <EcommerceCart /> },
   { path: "/apps-ecommerce-checkout", component: <EcommerceCheckout /> },

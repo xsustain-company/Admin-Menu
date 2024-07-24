@@ -19,15 +19,14 @@ import {
 } from "reactstrap";
 
 // Redux
-import { useDispatch } from "react-redux";
-import { addNewCompany, addNewProduct as onAddNewProduct } from "../../../slices/thunks";
+
 import makeAnimated from "react-select/animated";
 
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import classnames from "classnames";
 import Dropzone from "react-dropzone";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 
 //formik
 import { useFormik } from "formik";
@@ -42,18 +41,54 @@ import "filepond/dist/filepond.min.css";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import { updateCompanies1 } from "slices/thunks";
+
+import { useSelector, useDispatch } from "react-redux";
+import { createSelector } from "reselect";
+import { getOneCompany } from "slices/thunks";
+import { TablesBorderColors } from "pages/Tables/BasicTables/BasicTablesCode";
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
-const EcommerceAddProduct = (props: any) => {
-  document.title = "Create Product ";
+const EditCompany = (props: any) => {
+  document.title = "Update Company";
+  const useQuery = () => new URLSearchParams(useLocation().search);
+  const query = useQuery();
+  let id = query.get("id");
+  console.log("ID:", id);
+  
 
+  
   const history = useNavigate();
   const dispatch: any = useDispatch();
 
   const [selectedMulti3, setselectedMulti3] = useState<any>(null);
   const [selectedMulti4, setselectedMulti4] = useState<any>(null);
+
+
+  
+  const [company,setCompany] =useState<any>([]);
+  const slectedCompany = createSelector(
+    (state: any) => state.Companies,
+    (Companies) => Companies.oneCompany
+  );  // Inside your component
+  const Company = useSelector(slectedCompany);
+    useEffect(()=>{
+      console.log(Company);
+      
+    },[])
+  useEffect(() => {
+    if (Company && !Company.length) {
+      
+      dispatch(getOneCompany(id));
+    }
+  }, [dispatch]);
+  useEffect(() => {
+   setCompany(Company)
+   console.log("Comp : " ,Company);
+   
+  }, [Company]);
 
   const dateFormat = () => {
     let d = new Date(),
@@ -188,110 +223,98 @@ const EcommerceAddProduct = (props: any) => {
     reader.readAsDataURL(file);
   };
 
+  const NB = company?.tables ? company.tables.length : 0;
+  console.log(NB);
+  
+
   const validation: any = useFormik({
     enableReinitialize: true,
+    
 
     initialValues: {
-      name: "",
-      price: "",
-      phone:"",
-      subdomain: "",
-      stock: "",
-      email:"",
-      orders: "",
-      category: "",
-      publishedDate: "",
-      status: "",
-      rating: 4.5,
-      manufacturer_name: "",
-      manufacturer_brand: "",
-      product_discount: "",
-      product_tags: "",
-      logo: "",
-      Street: "",
-      zip: "",
-      description: "",
-      facebook:"",
-      instagram:"",
-      city:"",
-      mangerEmail:"",
-      tablesNumber:"",
+      name: company.name || "",
+      price: company.price || "",
+      phone: company.phone || "",
+      subdomain: company.subdomain || "",
+      stock: company.stock || "",
+      email: company.email || "",
+      orders: company.orders || "",
+      category: company.category || "",
+      publishedDate: company.publishedDate || "",
+      status: company.status || "",
+      rating: company.rating || 4.5,
+      website : company.website || "",
+      managerFirstName: company.agent?.firstname || "",
+      managerLastName: company.agent?.lastname || "",
+      product_discount: company.product_discount || "",
+      product_tags: company.product_tags || "",
+      logo: company.logo || "",
+      Street: company.address?.street || "",
+      zip: company.address?.zip || "",
+      description: company.description || "",
+      facebook: company.socialMedia?.facebook || "",
+      instagram: company.socialMedia?.instagram || "",
+      city: company.address?.city || "",
+      mangerEmail: company.agent?.email || "",
+      tablesNumber: NB || 0,
 
     },
     validationSchema: Yup.object({
-      //to enable later
-      /*name: Yup.string().required("Please Enter a Product Title"),
-      price: Yup.string().required("Please Enter a Product Price"),
-      stock: Yup.string().required("Please Enter a Product stock"),
-      orders: Yup.string().required("Please Enter a Product orders"),
-      category: Yup.string().required("Please Enter a Product category"),
-      // status: Yup.string().required("Please Enter a Product status"),
-      manufacturer_name: Yup.string().required("Please Enter a Manufacturer Name"),
-      manufacturer_brand: Yup.string().required("Please Enter a Manufacturer Brand"),
-      product_discount: Yup.string().required("Please Enter a Product Discount"),
-      product_tags: Yup.string().required("Please Enter a Product Tags"),
-      logo:Yup.string().required("Please add an logo")*/
+
     }),
+    
 
     onSubmit: (values) => {
       const formData = new FormData();
-      const imageFile = base64ToFile(selectedImage, "logo.png");
-      console.log(imageFile);
-
-      formData.append("logo", imageFile);
-
-      console.log(values);
-
-  /*    const newProduct = {
-        name: values.name,
-        description: values.description,
-        subdomain: values.subdomain,
-        address: {
-          street: values.Street,
-          city: "",
-          zip: values.zip,
-          country: "Tunisia",
-        },
-        socialMedia:{
-          facebook:values.facebook,
-          instagram: values.instagram
-        },
-        price: values.price,
-        stock: values.stock,
-        orders: values.orders,
-        publishedDate: date,
-        status: values.status,
-        rating: 4.5,
-        // logo: selectedImage
-      };*/
+    
+      // Add image if selected
+      if (selectedImage) {
+        const imageFile = base64ToFile(selectedImage, "logo.png");
+        formData.append("logo", imageFile);
+      }
+      
+    
+      // Append other form values
       formData.append("name", values.name);
       formData.append("phone", values.phone);
       formData.append("email", values.email);
-
       formData.append("description", values.description);
       formData.append("subdomain", values.subdomain);
       formData.append("address[street]", values.Street);
-      formData.append("address[city]", values.city); // Assuming city is empty for now
+      formData.append("address[city]", values.city);
       formData.append("address[zip]", values.zip);
       formData.append("address[country]", "Tunisia");
       formData.append("socialMedia[facebook]", values.facebook);
       formData.append("socialMedia[instagram]", values.instagram);
-      formData.append("price", values.price);
       formData.append("mangerEmail", values.mangerEmail);
+      formData.append("managerLastName", values.managerLastName);
+      formData.append("managerFirstName", values.managerFirstName);
+      formData.append("website", values.website);
       formData.append("tablesNumber", values.tablesNumber);
-
-      
-      
-      // save new product
-      dispatch(addNewCompany(formData));
-      history("/apps-ecommerce-products");
-      validation.resetForm();
+    
+      // Log for debugging
+      console.log("FormData:", formData);
+      console.log("IDDDD :", id);
+      const data = {formData , id}
+      // Dispatch the update action
+      dispatch(updateCompanies1(data))
+        .then(() => {
+          history("/apps-ecommerce-orders");
+          validation.resetForm();
+        })
+        .catch((error: any) => {
+          console.error("Update failed:", error);
+          // Handle error as needed
+        });
     },
+    
   });
+
+
   return (
     <div className="page-content">
       <Container fluid>
-        <BreadCrumb title="Create Product" pageTitle="Ecommerce" />
+        <BreadCrumb title="Update Company" pageTitle="Ecommerce" />
 
         <Row>
           <Col lg={8}>
@@ -797,23 +820,23 @@ const EcommerceAddProduct = (props: any) => {
                       <Input
                         type="text"
                         className="form-control"
-                        id="firstName"
-                        name="firstName"
-                        placeholder="Enter firstName"
-                        value={validation.values.firstName || ""}
+                        id="managerFirstName"
+                        name="managerFirstName"
+                        placeholder="Enter First Name"
+                        value={validation.values.managerFirstName || ""}
                         onBlur={validation.handleBlur}
                         onChange={validation.handleChange}
                         invalid={
-                          validation.errors.firstName &&
-                          validation.touched.firstName
+                          validation.errors.managerFirstName &&
+                          validation.touched.managerFirstName
                             ? true
                             : false
                         }
                       />
                       {validation.errors.firstName &&
-                      validation.touched.firstName ? (
+                      validation.touched.managerFirstName ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.firstName}
+                          {validation.errors.managerFirstName}
                         </FormFeedback>
                       ) : null}
                     </div>
@@ -826,23 +849,23 @@ const EcommerceAddProduct = (props: any) => {
                       <Input
                         type="text"
                         className="form-control"
-                        id="lastName"
-                        name="lastName"
+                        id="managerLastName"
+                        name="managerLastName"
                         placeholder="Enter last Name"
-                        value={validation.values.lastName || ""}
+                        value={validation.values.managerLastName || ""}
                         onBlur={validation.handleBlur}
                         onChange={validation.handleChange}
                         invalid={
-                          validation.errors.lastName &&
-                          validation.touched.lastName
+                          validation.errors.managerLastName &&
+                          validation.touched.managerLastName
                             ? true
                             : false
                         }
                       />
-                      {validation.errors.lastName &&
-                      validation.touched.lastName ? (
+                      {validation.errors.managerLastName &&
+                      validation.touched.managerLastName ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.lastName}
+                          {validation.errors.managerLastName}
                         </FormFeedback>
                       ) : null}
                     </div>
@@ -904,4 +927,4 @@ const EcommerceAddProduct = (props: any) => {
   );
 };
 
-export default EcommerceAddProduct;
+export default EditCompany;
