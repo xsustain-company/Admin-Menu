@@ -129,22 +129,8 @@ export const getCategoriesAPI = async () => {
     
     };
     
-
-export const addCategoryApi = async (data:any) => {
-  
-  console.log(data);
-  try{
-    let response =  await  customAxios.post(url.ADD_CATEGORY,{data})
-    console.log(response);
-    return response
-
-
-  }catch(err){
-    console.log(err);
-    
-  }
-  
-  };
+  export const addSubCategoryApi = (data : any) => api.create(url.ADD_SUBCATEGORY, data); 
+  export const addCategoryApi = (data : any) => api.create(url.ADD_CATEGORY, data); 
 
   export const de = async (data:any) => {
   
@@ -179,21 +165,7 @@ export const addCategoryApi = async (data:any) => {
     }
     
     };
-  export const addSubCategoryApi = async (data:any) => {
-  
-    console.log(data);
-    try{
-      let response =  await  customAxios.post(url.ADD_SUBCATEGORY,{data})
-      console.log(response);
-      return response
-  
-  
-    }catch(err){
-      console.log(err);
-      
-    }
-    
-    };
+
     export const deleteProducts = async (data:any) => {
   
       console.log(data);
@@ -222,8 +194,18 @@ export const addCategoryApi = async (data:any) => {
         }
         
         };
-
+        
+export const deleteSubCategoryApi = async (data:any) => {
+      try{
+        let response =  await  customAxios.delete(url.DELETE_SUBCATEGORY+"/"+data)
+        console.log(response);
+        return response
+        }catch(err){
+        console.log(err);
+            
+          }
           
+          };
 export const deleteCategoryAPI = async (data:any) => {
       try{
         let response =  await  customAxios.delete(url.DELETE_CATEGORY+"/"+data)

@@ -47,14 +47,18 @@ import {
   deleteOrder as onDeleteOrder,
   deleteCategory,
   updateSubCategory,
+  deleteSubCategory,
+  addSubCategory,
+  addCategories,
+  addCategory,
 } from "../../../slices/thunks";
-
+import { addCategoryApi } from "helpers/fakebackend_helper";
 import Loader from "../../../Components/Common/Loader";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { createSelector } from "reselect";
 import moment from "moment";
-import { addCategoryApi, addSubCategoryApi } from "helpers/fakebackend_helper";
+
 
 const EcommerceOrders = () => {
   const [modalSubCat, setModalSubCat] = useState<boolean>(false);
@@ -135,6 +139,21 @@ const EcommerceOrders = () => {
     setDeleteModal(true);
     dispatch(deleteCategory(order._id));
   };
+  const onClickDeleteSubCat = (order: any) => {
+    
+    setDeleteModal(true);
+    dispatch(deleteSubCategory(order._id));
+    dispatch(getSubCategoriess());
+    setDeleteModal(false);
+  };
+  const handleDeleteSubCat = () => {
+    if (order) {
+    dispatch(deleteSubCategory(order._id));
+    dispatch(getSubCategoriess());
+    setDeleteModal(false);
+    }
+  };
+  
 
   const handleDeleteOrder = () => {
     if (order) {
@@ -162,7 +181,7 @@ const EcommerceOrders = () => {
     }
   };
   useEffect(() => {
-    const data = subCategoriess.map((item: any) => ({
+    let data = subCategoriess.map((item: any) => ({
       value: item._id,
       label: item.name,
     }));
@@ -200,18 +219,18 @@ const EcommerceOrders = () => {
           name:values["name"],
         }
         try{
-          const  response = await addSubCategoryApi(data);
-
-          toast.success("sub category added")
+          dispatch(addSubCategory(data));
+          setModalSubCat(false);
+          dispatch(getSubCategoriess());
+          toast.success("sub category added");
+          
           return ;
-          dispatch(getSubCategoriess())
+          
         }catch(error){
           toast.error("Sub categorie failed ")
         }
 
       }
-
-
       if (isEditSubCat) {
         const data = {
           name: values["name"],
@@ -247,10 +266,14 @@ const EcommerceOrders = () => {
          
         };
         try{
-          const  response = await addCategoryApi(newCategory);
+          console.log("***********----",newCategory);
+          
+         dispatch(addCategory(newCategory));
 
           toast.success("category added")
           dispatch(getCategoriess())
+          
+          setModal(false);
         }catch(error){
           toast.error("categorie failed ")
         }
@@ -508,7 +531,7 @@ const EcommerceOrders = () => {
                     <Link
                       to="#"
                       className="text-danger d-inline-block remove-item-btn"
-                      onClick={() => onClickDelete(itemData)}
+                      onClick={() => onClickDeleteSubCat(itemData)}
                     >
                       <i className="ri-delete-bin-5-fill fs-16"></i>
                     </Link>
@@ -579,6 +602,11 @@ const EcommerceOrders = () => {
         onCloseClick={() => setDeleteModal(false)}
       />
       <DeleteModal
+        show={deleteModal}
+        onDeleteClick={handleDeleteSubCat}
+        onCloseClick={() => setDeleteModal(false)}
+      />
+      <DeleteModal
         show={deleteModalMulti}
         onDeleteClick={() => {
           deleteMultiple();
@@ -586,6 +614,7 @@ const EcommerceOrders = () => {
         }}
         onCloseClick={() => setDeleteModalMulti(false)}
       />
+
       <Container fluid>
         <BreadCrumb title="Orders" pageTitle="Ecommerce" />
         <Row>
@@ -701,7 +730,7 @@ const EcommerceOrders = () => {
                 </div>
                 <Modal id="showModal" isOpen={modal} toggle={toggle} centered>
                   <ModalHeader className="bg-light p-3" toggle={toggle}>
-                    {isEdit ? "Edit Order" : "Add Category"}
+                    {!!isEdit ? "Edit Order" : "Add Category"}
                   </ModalHeader>
                   <Form className="tablelist-form" onSubmit={(e: any) => {
                     e.preventDefault();
@@ -709,34 +738,79 @@ const EcommerceOrders = () => {
                     return false;
                   }}>
                     <ModalBody>
-                      {/* Form for Adding/Editing Categories */}
-                      <Label htmlFor="name" className="form-label">Category Name</Label>
-                      <Input
-                        name="name"
-                        id="name"
-                        className="form-control"
-                        placeholder="Enter Category Name"
-                        type="text"
-                        onChange={validation.handleChange}
-                        onBlur={validation.handleBlur}
-                        value={validation.values.name || ""}
-                        invalid={validation.touched.name && validation.errors.name ? true : false}
-                      />
-                      {validation.touched.name && validation.errors.name && (
-                        <FormFeedback type="invalid">{validation.errors.name}</FormFeedback>
-                      )}
-                      {/* Additional form elements if needed */}
+                      <input type="hidden" id="id-field" />
+
+               
+
+                      <div className="mb-3">
+                        <Label
+                          htmlFor="customername-field"
+                          className="form-label"
+                        >
+                          Category Name
+                        </Label>
+                        <Input
+                          name="name"
+                          id="name"
+                          className="form-control"
+                          placeholder="Enter Category Name"
+                          type="text"
+                          validate={{
+                            required: { value: true },
+                          }}
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.name || ""}
+                          invalid={
+                            validation.touched.name && validation.errors.name ? true : false
+                          }
+                        />
+                        {validation.touched.name && validation.errors.name ? (
+                          <FormFeedback type="invalid">{validation.errors.name}</FormFeedback>
+                        ) : null}
+                        <br></br>
+                        <Col md="12">
+                <Label>Sous-Categories</Label>
+                <Select
+                            value={selectedMulti3}
+                            isMulti={true}
+                            onChange={(selectedMulti3: any) => {
+                              handleMulti3(selectedMulti3);
+                            }}
+                            options={formatedOptions}
+
+                            closeMenuOnSelect={false}
+                            components={animatedComponents}
+                          />
+               
+              </Col>
+
+                      </div>
+
+
                     </ModalBody>
                     <div className="modal-footer">
                       <div className="hstack gap-2 justify-content-end">
-                        <button type="button" className="btn btn-light" onClick={() => setModal(false)}>Close</button>
+                        <button
+                          type="button"
+                          className="btn btn-light"
+                          onClick={() => {
+                            setModal(false);
+                          }}
+                        >
+                          Close
+                        </button>
+
                         <button type="submit" className="btn btn-success">
-                          {isEdit ? "Update" : "Add Category"}
+                          {!!isEdit
+                            ? "Update"
+                            : "Add Category"}
                         </button>
                       </div>
                     </div>
                   </Form>
                 </Modal>
+
 
 
                 <Modal id="showModal" isOpen={modalSubCat} toggle={toggleSubCatModal} centered>

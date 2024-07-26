@@ -23,7 +23,10 @@ import {
   deleteCompanieAPI,
   updateCompany1,
   deleteCategoryAPI,
-  updateSubCategoryApi
+  updateSubCategoryApi,
+  deleteSubCategoryApi,
+  addSubCategoryApi,
+  addCategoryApi
 } from "../../helpers/fakebackend_helper";
 
 export const getProducts = createAsyncThunk("ecommerce/getProducts", async () => {
@@ -113,6 +116,19 @@ export const deleteCategory = createAsyncThunk("ecommerce/deleteCategory", async
     return error;
   }
 });
+
+
+export const deleteSubCategory = createAsyncThunk("ecommerce/deleteSubCategory", async (product:any) => {
+  try {
+    const response = deleteSubCategoryApi(product);
+    toast.success("SubCategory Deleted Successfully", { autoClose: 3000 });
+    return { product, ...response };
+  } catch (error) {
+    toast.error("SubCategory Delete Failed", { autoClose: 3000 });
+    return error;
+  }
+});
+
 
 
 
@@ -216,6 +232,19 @@ export const addNewOrder = createAsyncThunk("ecommerce/addNewOrder", async (orde
     return data;
   } catch (error) {
     toast.error("Order Added Failed", { autoClose: 3000 });
+    return error;
+  }
+});
+
+
+export const addCategory = createAsyncThunk("ecommerce/addCategory", async (order:any) => {
+  try {
+    const response = addCategoryApi(order);
+    const data = await response;
+    toast.success("Category Added Successfully", { autoClose: 3000 });
+    return data;
+  } catch (error) {
+    toast.error("Category Added Failed", { autoClose: 3000 });
     return error;
   }
 });
