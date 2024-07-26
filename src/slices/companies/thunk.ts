@@ -117,3 +117,15 @@ export const getOneCompany = createAsyncThunk("ecommerce/getOneCompany", async (
     return { error: error.message };
   }
 });
+
+export const getOneProduct = createAsyncThunk("ecommerce/getOneProduct", async (id:any) => {
+  try {
+    const response = await getOneProductApi(id);
+    console.log("Responseee :: ",response);
+    
+    return response
+  } catch (error:any) {
+    return { error: error.message };
+  }
+});
+

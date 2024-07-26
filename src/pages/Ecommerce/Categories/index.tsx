@@ -45,6 +45,8 @@ import {
   addNewOrder as onAddNewOrder,
   updateOrder as onUpdateOrder,
   deleteOrder as onDeleteOrder,
+  deleteCategory,
+  updateSubCategory,
 } from "../../../slices/thunks";
 
 import Loader from "../../../Components/Common/Loader";
@@ -55,6 +57,7 @@ import moment from "moment";
 import { addCategoryApi, addSubCategoryApi } from "helpers/fakebackend_helper";
 
 const EcommerceOrders = () => {
+  const [modalSubCat, setModalSubCat] = useState<boolean>(false);
 
   const [modal, setModal] = useState<boolean>(false);
   const [modalView, setModalView] = useState<boolean>(false);
@@ -87,29 +90,19 @@ const EcommerceOrders = () => {
   );
   
   useEffect(() => {
-    console.log(subCategoriess);
-    
-    if (subCategoriess && !subCategoriess.length) {
+    if (!subCategoriess.length) {
       dispatch(getSubCategoriess());
-      let data = subCategories.map((item:any) => ({
-        value: item._id,
-        label: item.name,
-      }))
-      console.log(data);
-      
-     // setFormatedOptions()
     }
-
-  }, [dispatch, subCategoriess]);
+  }, [dispatch, subCategoriess.length]);
   
-
   useEffect(() => {
-    if (companies && !companies.length) {
+    if (!companies.length) {
       dispatch(getCategoriess());
+    } else {
+      setCompaniesList(companies);
     }
   }, [dispatch, companies]);
-
-
+  
 
   // Inside your component
   const {
@@ -119,71 +112,8 @@ const EcommerceOrders = () => {
   const [order, setOrder] = useState<any>([]);
   const [category, setCategory] = useState<any>([]);
 
-  const orderstatus = [
-    {
-      options: [
-        { label: "Status", value: "Status" },
-        { label: "All", value: "All" },
-        { label: "Pending", value: "Pending" },
-        { label: "Inprogress", value: "Inprogress" },
-        { label: "Cancelled", value: "Cancelled" },
-        { label: "Pickups", value: "Pickups" },
-        { label: "Returns", value: "Returns" },
-        { label: "Delivered", value: "Delivered" },
-      ],
-    },
-  ];
-
-  const orderpayement = [
-    {
-      options: [
-        { label: "Select Payment", value: "Select Payment" },
-        { label: "All", value: "All" },
-        { label: "Mastercard", value: "Mastercard" },
-        { label: "Paypal", value: "Paypal" },
-        { label: "Visa", value: "Visa" },
-        { label: "COD", value: "COD" },
-      ],
-    },
-  ];
-
-  const productname = [
-    {
-      options: [
-        { label: "Product", value: "Product" },
-        { label: "Puma Tshirt", value: "Puma Tshirt" },
-        { label: "Adidas Sneakers", value: "Adidas Sneakers" },
-        {
-          label: "350 ml Glass Grocery Container",
-          value: "350 ml Glass Grocery Container",
-        },
-        {
-          label: "American egale outfitters Shirt",
-          value: "American egale outfitters Shirt",
-        },
-        { label: "Galaxy Watch4", value: "Galaxy Watch4" },
-        { label: "Apple iPhone 12", value: "Apple iPhone 12" },
-        { label: "Funky Prints T-shirt", value: "Funky Prints T-shirt" },
-        {
-          label: "USB Flash Drive Personalized with 3D Print",
-          value: "USB Flash Drive Personalized with 3D Print",
-        },
-        {
-          label: "Oxford Button-Down Shirt",
-          value: "Oxford Button-Down Shirt",
-        },
-        {
-          label: "Classic Short Sleeve Shirt",
-          value: "Classic Short Sleeve Shirt",
-        },
-        {
-          label: "Half Sleeve T-Shirts (Blue)",
-          value: "Half Sleeve T-Shirts (Blue)",
-        },
-        { label: "Noise Evolve Smartwatch", value: "Noise Evolve Smartwatch" },
-      ],
-    },
-  ];
+  
+  const [isEditSubCat, setIsEditSubCat] = useState<boolean>(false);
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [createSubCategorie, setIsCreateSubCategorie] = useState<boolean>(false);
@@ -201,8 +131,9 @@ const EcommerceOrders = () => {
     subCategories
   ])
   const onClickDelete = (order: any) => {
-    setOrder(order);
+    
     setDeleteModal(true);
+    dispatch(deleteCategory(order._id));
   };
 
   const handleDeleteOrder = () => {
@@ -215,11 +146,11 @@ const EcommerceOrders = () => {
   useEffect(() => {
     setCompaniesList(companies);
   }, [companies]);
-
+  
   useEffect(() => {
     if (!isEmpty(companies)) setCompaniesList(companies);
   }, [companies]);
-
+  
   const toggleTab = (tab: any, type: any) => {
     if (activeTab !== tab) {
       setActiveTab(tab);
@@ -231,18 +162,14 @@ const EcommerceOrders = () => {
     }
   };
   useEffect(() => {
-    console.log();
-    
-    let data = subCategoriess.map((item:any) => ({
+    const data = subCategoriess.map((item: any) => ({
       value: item._id,
       label: item.name,
-    }))
+    }));
     console.log(data);
-    
-   setFormatedOptions(data)
+    setFormatedOptions(data);
+  }, [subCategoriess]);
   
-
-}, [subCategoriess]);
   // validation
   const validation: any = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -277,11 +204,25 @@ const EcommerceOrders = () => {
 
           toast.success("sub category added")
           return ;
-          dispatch(getCategoriess())
+          dispatch(getSubCategoriess())
         }catch(error){
-          toast.error("categorie failed ")
+          toast.error("Sub categorie failed ")
         }
 
+      }
+
+
+      if (isEditSubCat) {
+        const data = {
+          name: values["name"],
+        };
+        const ID = order.id;
+        console.log("choofe : ", data);
+        dispatch(updateSubCategory({ SubCat: data, id: ID }));
+        setModalSubCat(false);
+        dispatch(getSubCategoriess());
+        
+        return;
       }
       if (isEdit) {
         const updateOrder = {
@@ -372,23 +313,66 @@ const EcommerceOrders = () => {
     }
   }, [modal]);
 
-  const handleOrderClick = useCallback((arg: any) => {
-    const order = arg;
-    setOrder({
-      id: order.id,
-      orderId: order.orderId,
-      customer: order.customer,
-      product: order.product,
-      orderDate: order.orderDate,
-      ordertime: order.ordertime,
-      amount: order.amount,
-      payment: order.payment,
-      status: order.status
-    });
 
-    setIsEdit(true);
-    toggle();
-  }, [toggle]);
+  const toggleSubCatModal = useCallback(() => {
+    if (modalSubCat) {
+      setModalSubCat(false);
+      setOrder(null);
+    } else {
+      setModalSubCat(true);
+    }
+  }, [modalSubCat]);
+
+
+
+  const handleOrderClick = useCallback((arg: any, type: string) => {
+    const order = arg;
+    if (type === "category") {
+      setOrder({
+        id: order.id,
+        orderId: order.orderId,
+        customer: order.customer,
+        product: order.product,
+        orderDate: order.orderDate,
+        ordertime: order.ordertime,
+        amount: order.amount,
+        payment: order.payment,
+        status: order.status,
+        // Other category details if needed
+      });
+      setIsEdit(true);
+      toggle();
+    } else if (type === "subcategory") {
+      // Similar logic for subcategory
+      setOrder({
+        id: order._id,
+        name: order.name,
+        // Other subcategory details if needed
+      });
+      setIsEdit(true);
+      toggle(); 
+    }
+  }, [toggle, setOrder, setIsEdit]); // Ensure dependencies are correctly included
+
+  
+  const handleEditSubClick = useCallback((arg: any, type: string) => {
+    const order = arg;
+   
+      setOrder({
+        id: order._id,
+        name: order.name,
+      });
+      setIsEditSubCat(true);
+      toggleSubCatModal(); 
+    
+  }, [toggleSubCatModal, setOrder, setIsEditSubCat]); // Ensure dependencies are correctly included
+  
+  
+
+
+
+
+
   const animatedComponents = makeAnimated();
   const [formatedOptions,setFormatedOptions] = useState([])
     useEffect(()=>{console.log(formatedOptions);
@@ -448,7 +432,11 @@ const EcommerceOrders = () => {
     setSelectedCheckBoxDelete(ele);
   };
 
-  
+  const handleOrderClicksSubCategories = () => {
+    setSubCategories([])
+    setSubCategoriesField([])
+    setIsEdit(false);
+  };
 
   
   // Column
@@ -465,7 +453,7 @@ const EcommerceOrders = () => {
         enableSorting: false,
       },
       {
-        header: "Categorie Id",
+        header: "Id",
         accessorKey: "_id",
         enableColumnFilter: false,
         cell: (cell: any) => {
@@ -473,11 +461,10 @@ const EcommerceOrders = () => {
         },
       },
       {
-        header: "Category Name",
+        header: "Name",
         accessorKey: "name",
         enableColumnFilter: false,
       },
-     
       {
         header: "createdAt",
         accessorKey: "createdAt",
@@ -489,62 +476,72 @@ const EcommerceOrders = () => {
           </>
         ),
       },
-    
-
       {
         header: "Action",
         cell: (cellProps: any) => {
+          const isSubCategoriesTab = activeTab === "2";
+          const itemData = cellProps.row.original;
+    
           return (
             <ul className="list-inline hstack gap-2 mb-0">
-              <li className="list-inline-item">
-              <Link
-                  to="#"
-                  className="text-primary d-inline-block edit-item-btn"
-                  onClick={() => {
-                    const orderData = cellProps.row.original;
-                    console.log(cellProps);
-
-                    handleViewCategorie(orderData);
-
-                  }}
-                >
-                  <i className="ri-eye-fill fs-16"></i>
-                </Link>
-               
-              </li>
-              <li className="list-inline-item edit">
-                <Link
-                  to="#"
-                  className="text-primary d-inline-block edit-item-btn"
-                  onClick={() => {
-                    const orderData = cellProps.row.original;
-                    handleOrderClick(orderData);
-
-                  }}
-                >
-                  <i className="ri-pencil-fill fs-16"></i>
-                </Link>
-              </li>
-              <li className="list-inline-item">
-                <Link
-                  to="#"
-                  className="text-danger d-inline-block remove-item-btn"
-                  onClick={() => {
-                    const orderData = cellProps.row.original;
-                    onClickDelete(orderData);
-                  }}
-                >
-                  <i className="ri-delete-bin-5-fill fs-16"></i>
-                </Link>
-              </li>
+              {isSubCategoriesTab ? (
+                <>
+                  <li className="list-inline-item">
+                    <Link
+                      to="#"
+                      className="text-primary d-inline-block edit-item-btn"
+                      onClick={() => handleViewCategorie(itemData)}
+                    >
+                      <i className="ri-eye-fill fs-16"></i>
+                    </Link>
+                  </li>
+                  <li className="list-inline-item edit">
+                    <Link
+                      to="#"
+                      className="text-primary d-inline-block edit-item-btn"
+                      onClick={() => handleEditSubClick(itemData, "subcategory")}
+                    >
+                      <i className="ri-pencil-fill fs-16"></i>
+                    </Link>
+                  </li>
+                  <li className="list-inline-item">
+                    <Link
+                      to="#"
+                      className="text-danger d-inline-block remove-item-btn"
+                      onClick={() => onClickDelete(itemData)}
+                    >
+                      <i className="ri-delete-bin-5-fill fs-16"></i>
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="list-inline-item">
+                    <Link
+                      to="#"
+                      className="text-primary d-inline-block edit-item-btn"
+                      onClick={() => handleOrderClick(itemData, "category")}
+                    >
+                      <i className="ri-pencil-fill fs-16"></i>
+                    </Link>
+                  </li>
+                  <li className="list-inline-item">
+                    <Link
+                      to="#"
+                      className="text-danger d-inline-block remove-item-btn"
+                      onClick={() => onClickDelete(itemData)}
+                    >
+                      <i className="ri-delete-bin-5-fill fs-16"></i>
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
           );
         },
       },
-    ],
-    [handleOrderClick, checkedAll]
-  );
-
+    ], [handleOrderClick, handleViewCategorie, onClickDelete, activeTab]);
+  
   const handleValidDate = (date: any) => {
     const date1 = moment(new Date(date)).format("DD MMM Y");
     return date1;
@@ -647,12 +644,12 @@ const EcommerceOrders = () => {
                         className={classnames(
                           { active: activeTab === "1" })}
                         onClick={() => {
-                          toggleTab("1", "all");
+                          toggleTab("1", "categories");
                         }}
                         href="#"
                       >
                         <i className="ri-store-2-fill me-1 align-bottom"></i>{" "}
-                        All Categories
+                        Categories
                       </NavLink>
                     </NavItem>
                     <NavItem>
@@ -660,76 +657,51 @@ const EcommerceOrders = () => {
                         className={classnames(
                           { active: activeTab === "2" })}
                         onClick={() => {
-                          toggleTab("2", "Delivered");
+                          toggleTab("2", "sunCategories");
                         }}
                         href="#"
                       >
                         <i className="ri-checkbox-circle-line me-1 align-bottom"></i>{" "}
-                        Delivered
+                        SubCategories
                       </NavLink>
                     </NavItem>
-                    <NavItem>
-                      <NavLink
-                        className={classnames(
-                          { active: activeTab === "3" })}
-                        onClick={() => {
-                          toggleTab("3", "Pickups");
-                        }}
-                        href="#"
-                      >
-                        <i className="ri-truck-line me-1 align-bottom"></i>{" "}
-                        Pickups{" "}
-                        <span className="badge bg-danger align-middle ms-1">
-                          2
-                        </span>
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink
-                        className={classnames(
-                          { active: activeTab === "4" })}
-                        onClick={() => {
-                          toggleTab("4", "Returns");
-                        }}
-                        href="#"
-                      >
-                        <i className="ri-arrow-left-right-fill me-1 align-bottom"></i>{" "}
-                        Returns
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink
-                        className={classnames(
-                          { active: activeTab === "5" })}
-                        onClick={() => {
-                          toggleTab("5", "Cancelled");
-                        }}
-                        href="#"
-                      >
-                        <i className="ri-close-circle-line me-1 align-bottom"></i>{" "}
-                        Cancelled
-                      </NavLink>
-                    </NavItem>
+                    
                   </Nav>
 
                   {companies.length ? (
+                  activeTab === "2" ? (
                     <TableContainer
                       columns={columns}
-                      data={(companies || [])}
+                      data={(subCategoriess || [])}
                       isGlobalFilter={true}
                       customPageSize={8}
                       divClass="table-responsive table-card mb-1 mt-0"
                       tableClass="align-middle table-nowrap"
                       theadClass="table-light text-muted text-uppercase"
                       isOrderFilter={true}
-                      SearchPlaceholder='Search for order ID, customer, order status or something...'
-                    />
-                  ) : (<Loader error={error} />)
-                  }
+                      SearchPlaceholder='Search for subcategory name...'
+                                          />
+                        ) : (
+                          <TableContainer
+                            columns={columns}
+                            data={(companies || [])}
+                            isGlobalFilter={true}
+                            customPageSize={8}
+                            divClass="table-responsive table-card mb-1 mt-0"
+                            tableClass="align-middle table-nowrap"
+                            theadClass="table-light text-muted text-uppercase"
+                            isOrderFilter={true}
+                            SearchPlaceholder='Search for category ID, name, createdAT or something...'
+                          />
+                        )
+                      ) : (
+                        <p>No data available</p>  // Optional: Add a message if no data is available
+                      )}
+
                 </div>
                 <Modal id="showModal" isOpen={modal} toggle={toggle} centered>
                   <ModalHeader className="bg-light p-3" toggle={toggle}>
-                    {!!isEdit ? "Edit Order" : "Add Category"}
+                    {isEdit ? "Edit Order" : "Add Category"}
                   </ModalHeader>
                   <Form className="tablelist-form" onSubmit={(e: any) => {
                     e.preventDefault();
@@ -737,73 +709,29 @@ const EcommerceOrders = () => {
                     return false;
                   }}>
                     <ModalBody>
-                      <input type="hidden" id="id-field" />
-
-               
-
-                      <div className="mb-3">
-                        <Label
-                          htmlFor="customername-field"
-                          className="form-label"
-                        >
-                          Category Name
-                        </Label>
-                        <Input
-                          name="name"
-                          id="name"
-                          className="form-control"
-                          placeholder="Enter Category Name"
-                          type="text"
-                          validate={{
-                            required: { value: true },
-                          }}
-                          onChange={validation.handleChange}
-                          onBlur={validation.handleBlur}
-                          value={validation.values.name || ""}
-                          invalid={
-                            validation.touched.name && validation.errors.name ? true : false
-                          }
-                        />
-                        {validation.touched.name && validation.errors.name ? (
-                          <FormFeedback type="invalid">{validation.errors.name}</FormFeedback>
-                        ) : null}
-                        <br></br>
-                        <Col md="12">
-                <Label>Sous-Categories</Label>
-                <Select
-                            value={selectedMulti3}
-                            isMulti={true}
-                            onChange={(selectedMulti3: any) => {
-                              handleMulti3(selectedMulti3);
-                            }}
-                            options={formatedOptions}
-
-                            closeMenuOnSelect={false}
-                            components={animatedComponents}
-                          />
-               
-              </Col>
-
-                      </div>
-
-
+                      {/* Form for Adding/Editing Categories */}
+                      <Label htmlFor="name" className="form-label">Category Name</Label>
+                      <Input
+                        name="name"
+                        id="name"
+                        className="form-control"
+                        placeholder="Enter Category Name"
+                        type="text"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.name || ""}
+                        invalid={validation.touched.name && validation.errors.name ? true : false}
+                      />
+                      {validation.touched.name && validation.errors.name && (
+                        <FormFeedback type="invalid">{validation.errors.name}</FormFeedback>
+                      )}
+                      {/* Additional form elements if needed */}
                     </ModalBody>
                     <div className="modal-footer">
                       <div className="hstack gap-2 justify-content-end">
-                        <button
-                          type="button"
-                          className="btn btn-light"
-                          onClick={() => {
-                            setModal(false);
-                          }}
-                        >
-                          Close
-                        </button>
-
+                        <button type="button" className="btn btn-light" onClick={() => setModal(false)}>Close</button>
                         <button type="submit" className="btn btn-success">
-                          {!!isEdit
-                            ? "Update"
-                            : "Add Category"}
+                          {isEdit ? "Update" : "Add Category"}
                         </button>
                       </div>
                     </div>
@@ -811,9 +739,49 @@ const EcommerceOrders = () => {
                 </Modal>
 
 
-                 <Modal id="showModal" isOpen={modalAddSubCategorie} toggle={toggleAddSubCategorie} centered>
+                <Modal id="showModal" isOpen={modalSubCat} toggle={toggleSubCatModal} centered>
+                  <ModalHeader className="bg-light p-3" toggle={toggleSubCatModal}>
+                  Sub cat edit
+                  </ModalHeader>
+                  <Form className="tablelist-form" onSubmit={(e: any) => {
+                    e.preventDefault();
+                    validation.handleSubmit();
+                    return false;
+                  }}>
+                    <ModalBody>
+                      {/* Form for Adding/Editing Categories */}
+                      <Label htmlFor="name" className="form-label">Sub Category Name</Label>
+                      <Input
+                        name="name"
+                        id="name"
+                        className="form-control"
+                        placeholder="Enter SubCategory Name"
+                        type="text"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.name || ""}
+                        invalid={validation.touched.name && validation.errors.name ? true : false}
+                      />
+                      {validation.touched.name && validation.errors.name && (
+                        <FormFeedback type="invalid">{validation.errors.name}</FormFeedback>
+                      )}
+                      {/* Additional form elements if needed */}
+                    </ModalBody>
+                    <div className="modal-footer">
+                      <div className="hstack gap-2 justify-content-end">
+                        <button type="button" className="btn btn-light" onClick={() => setModalSubCat(false)}>Close</button>
+                        <button type="submit" className="btn btn-success">
+                          Update SubCategory
+                        </button>
+                      </div>
+                    </div>
+                  </Form>
+                </Modal>
+
+
+                <Modal id="showModal" isOpen={modalAddSubCategorie} toggle={toggleAddSubCategorie} centered>
                   <ModalHeader className="bg-light p-3" toggle={toggleAddSubCategorie}>
-                    {!!isEdit ? "Edit Order" : "Add Sub Category"}
+                    {isEdit ? "Edit Order" : "Add Sub Category"}
                   </ModalHeader>
                   <Form className="tablelist-form" onSubmit={(e: any) => {
                     e.preventDefault();
@@ -821,68 +789,38 @@ const EcommerceOrders = () => {
                     return false;
                   }}>
                     <ModalBody>
-                      <input type="hidden" id="id-field" />
-
-               
-
-                      <div className="mb-3">
-                        <Label
-                          htmlFor="customername-field"
-                          className="form-label"
-                        >
-                          Sub Category Name
-                        </Label>
-                        <Input
-                          name="name"
-                          id="name"
-                          className="form-control"
-                          placeholder="Enter Category Name"
-                          type="text"
-                          validate={{
-                            required: { value: true },
-                          }}
-                          onChange={validation.handleChange}
-                          onBlur={validation.handleBlur}
-                          value={validation.values.name || ""}
-                          invalid={
-                            validation.touched.name && validation.errors.name ? true : false
-                          }
-                        />
-                        {validation.touched.name && validation.errors.name ? (
-                          <FormFeedback type="invalid">{validation.errors.name}</FormFeedback>
-                        ) : null}
-                        <br></br>
-                        <Col md="12">
-               
-               
-              </Col>
-
-                      </div>
-
-
+                      {/* Form for Adding Subcategories */}
+                      <Label htmlFor="name" className="form-label">Sub Category Name</Label>
+                      <Input
+                        name="name"
+                        id="name"
+                        className="form-control"
+                        placeholder="Enter Sub Category Name"
+                        type="text"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.name || ""}
+                        invalid={validation.touched.name && validation.errors.name ? true : false}
+                      />
+                      {validation.touched.name && validation.errors.name && (
+                        <FormFeedback type="invalid">{validation.errors.name}</FormFeedback>
+                      )}
+                      {/* Additional form elements if needed */}
                     </ModalBody>
                     <div className="modal-footer">
                       <div className="hstack gap-2 justify-content-end">
-                        <button
-                          type="button"
-                          className="btn btn-light"
-                          onClick={() => {
-                            setModal(false);
-                          }}
-                        >
-                          Close
-                        </button>
-
+                        <button type="button" className="btn btn-light" onClick={() => setModalAddSubCategorie(false)}>Close</button>
                         <button type="submit" className="btn btn-success">
-                          {!!isEdit
-                            ? "Update"
-                            : "Add Sub Category"}
+                          {isEdit ? "Update" : "Add Sub Category"}
                         </button>
                       </div>
                     </div>
                   </Form>
                 </Modal>
+
                 
+
+                                
 
                 <Modal id="showDetailsModal" isOpen={modalView} toggle={toggleView} centered >
                 <ModalHeader className="bg-light p-3" toggle={toggleView}>
@@ -904,29 +842,24 @@ const EcommerceOrders = () => {
                         </Label>
                         <br></br>
 
-                        <Label
-                          htmlFor="id-field"
-                          className="form-label"
-                        >
-                          Sub categories  : 
+                        <Label htmlFor="id-field" className="form-label">
+                          Sub categories:
                         </Label>
-                        <br></br>
-                        {category?.subcategory?.length==0 ? (
+                        <br />
+                        {category?.subcategory?.length === 0 ? (
                           <>
-                           <Label
-                          htmlFor="id-field"
-                          className="form-label"
-                        >
-                          there is no subCateogirs for this category 
-                        </Label>
+                            <Label htmlFor="id-field" className="form-label">
+                              There are no subcategories for this category
+                            </Label>
                           </>
-                      ) : (
-                        category?.subcategory?.map((value: any, i: number) => (
-                          <div key={i}>
-                            <Label>{value.name}</Label>
-                          </div>
-                        ))
-                      )}
+                        ) : (
+                          category?.subcategory?.map((value: any, i: number) => (
+                            <div key={i}>
+                              <Label>{value.name}</Label>
+                            </div>
+                          ))
+                        )}
+
                     </ModalBody>
                 </Modal>
 

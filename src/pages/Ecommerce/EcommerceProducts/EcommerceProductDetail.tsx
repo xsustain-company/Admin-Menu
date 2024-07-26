@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardBody,
@@ -22,7 +22,8 @@ import BreadCrumb from "../../../Components/Common/BreadCrumb";
 
 import product1 from "../../../assets/images/products/img-1.png";
 import product6 from "../../../assets/images/products/img-6.png";
-import product8 from "../../../assets/images/products/img-8.png";
+import product8 from "../../../assets/images/products/product-unav.png";
+
 
 import { productDetailsWidgets, reviews } from "../../../common/data/ecommerce";
 
@@ -36,7 +37,10 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { createSelector } from "reselect";
+import { getOneProduct } from "slices/thunks";
 
 
 const ProductReview = (props:any) => {
@@ -121,6 +125,40 @@ function EcommerceProductDetail(props:any) {
   const [lsize, setlsize] = useState<boolean>(false);
   const [xlsize, setxlsize] = useState<boolean>(false);
   const [customActiveTab, setcustomActiveTab] = useState<any>("1");
+  const [product,setProduct] =useState<any>([]);
+
+  const useQuery = () => new URLSearchParams(useLocation().search);
+  const query = useQuery();
+  const id = query.get("id");
+  console.log(id);
+  
+
+
+  const dispatch: any = useDispatch();
+  const slectedProduct = createSelector(
+    (state: any) => state.Companies,
+    (Products) => Products.oneProduct
+  );  // Inside your component
+  const Product = useSelector(slectedProduct);
+    useEffect(()=>{
+      console.log(Product);
+      
+    },[])
+  useEffect(() => {
+    if (Product && !Product.length) {
+      
+      dispatch(getOneProduct(id));
+    }
+  }, [dispatch]);
+  
+  useEffect(() => {
+   setProduct(Product)
+   console.log("Product : " ,Product);
+   
+  }, [Product]);
+
+
+
   const toggleCustom = (tab:any) => {
     if (customActiveTab !== tab) {
       setcustomActiveTab(tab);
@@ -138,93 +176,13 @@ function EcommerceProductDetail(props:any) {
                 <Row className="gx-lg-5">
                   <Col xl={4} md={8} className="mx-auto">
                     <div className="product-img-slider sticky-side-div">
-                      <Swiper
-                      modules={[Thumbs, Navigation, FreeMode]}
-                        navigation={true}
-                        thumbs={{ swiper: thumbsSwiper }}
-                        className="swiper product-thumbnail-slider p-2 rounded bg-light"
-                      >
-                        <div className="swiper-wrapper">
-                          <SwiperSlide>
+                        <div className="swiper-wrapper swiper product-thumbnail-slider p-2 rounded bg-light">
                             <img
-                              src={product8}
+                              src={product && product.image ? (`http://localhost:3001${product.image}`) : product8} 
                               alt=""
                               className="img-fluid d-block"
                             />
-                          </SwiperSlide>
-                          <SwiperSlide>
-                            <img
-                              src={product6}
-                              alt=""
-                              className="img-fluid d-block"
-                            />
-                          </SwiperSlide>
-                          <SwiperSlide>
-                            <img
-                              src={product1}
-                              alt=""
-                              className="img-fluid d-block"
-                            />
-                          </SwiperSlide>
-                          <SwiperSlide>
-                            <img
-                              src={product8}
-                              alt=""
-                              className="img-fluid d-block"
-                            />
-                          </SwiperSlide>
                         </div>
-                      </Swiper>
-
-                      <div className="product-nav-slider mt-2">
-                        <Swiper
-                          onSwiper={setThumbsSwiper}
-                          slidesPerView={4}
-                          freeMode={true}
-                          watchSlidesProgress={true}
-                          spaceBetween={10}
-                          className="swiper product-nav-slider mt-2 overflow-hidden"
-                        >
-                          <div className="swiper-wrapper">
-                            <SwiperSlide className="rounded">
-                              <div className="nav-slide-item">
-                                <img
-                                  src={product8}
-                                  alt=""
-                                  className="img-fluid d-block rounded"
-                                />
-                              </div>
-                            </SwiperSlide>
-                            <SwiperSlide>
-                              <div className="nav-slide-item">
-                                <img
-                                  src={product6}
-                                  alt=""
-                                  className="img-fluid d-block rounded"
-                                />
-                              </div>
-                            </SwiperSlide>
-                            <SwiperSlide>
-                              <div className="nav-slide-item">
-                                <img
-                                  src={product1}
-                                  alt=""
-                                  className="img-fluid d-block rounded"
-                                />
-                              </div>
-                            </SwiperSlide>
-                            <SwiperSlide>
-                              <div className="nav-slide-item">
-                                <img
-                                  src={product8}
-                                  alt=""
-                                  className="img-fluid d-block rounded"
-                                />
-                              </div>
-                            </SwiperSlide>
-                          </div>
-                        </Swiper>
-                      </div>
                     </div>
                   </Col>
 
@@ -232,28 +190,8 @@ function EcommerceProductDetail(props:any) {
                     <div className="mt-xl-0 mt-5">
                       <div className="d-flex">
                         <div className="flex-grow-1">
-                          <h4>Full Sleeve Sweatshirt for Men (Pink)</h4>
-                          <div className="hstack gap-3 flex-wrap">
-                            <div>
-                              <Link to="#" className="text-primary d-block">
-                                Tommy Hilfiger
-                              </Link>
-                            </div>
-                            <div className="vr"></div>
-                            <div className="text-muted">
-                              Seller :{" "}
-                              <span className="text-body fw-medium">
-                                Zoetic Fashion
-                              </span>
-                            </div>
-                            <div className="vr"></div>
-                            <div className="text-muted">
-                              Published :{" "}
-                              <span className="text-body fw-medium">
-                                26 Mar, 2021
-                              </span>
-                            </div>
-                          </div>
+                          <br /><br />
+                          <h4>{product && product.name ? product.name : "Product Name not availabe"} </h4>
                         </div>
                         <div className="flex-shrink-0">
                           <div>
@@ -268,7 +206,7 @@ function EcommerceProductDetail(props:any) {
                               Edit
                             </Tooltip>
                             <a
-                              href="apps-ecommerce-add-product"
+                              href={`editProduct?id=${id}`}
                               id="TooltipTop"
                               className="btn btn-light"
                             >
@@ -292,12 +230,71 @@ function EcommerceProductDetail(props:any) {
                       </div>
 
                       <Row className="mt-4">
-                        {productDetailsWidgets.map((pricingDetails, key) => (
-                          <PricingWidgetList
-                            pricingDetails={pricingDetails}
-                            key={key}
-                          />
-                        ))}
+                        <Col lg={3} sm={6}>
+                            <div className="p-2 border border-dashed rounded">
+                              <div className="d-flex align-items-center">
+                                <div className="avatar-sm me-2">
+                                  <div className="avatar-title rounded bg-transparent text-success fs-24">
+                                    <i className="ri-coins-fill"></i>
+                                  </div>
+                                </div>
+                                <div className="flex-grow-1">
+                                  <p className="text-muted mb-1">Price :</p>
+                                  <h5 className="mb-0">{product.price} .TND</h5>
+                                </div>
+                              </div>
+                            </div>
+                        </Col>
+                        <Col lg={3} sm={6}>
+                            <div className="p-2 border border-dashed rounded">
+                              <div className="d-flex align-items-center">
+                                <div className="avatar-sm me-2">
+                                  <div className="avatar-title rounded bg-transparent text-success fs-24">
+                                    <i className="ri-stack-fill"></i>
+                                  </div>
+                                </div>
+                                <div className="flex-grow-1">
+                                  <p className="text-muted mb-1 ">Stocks </p>
+                                  {product?.availability ? (
+                                    <div className="flex-shrink-0 ms-2">
+                                      
+                                      <div className="badge bg-success text-white fs-15 ">
+                                      Available
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <div className="flex-shrink-0 ms-2">
+                                      <div className="badge bg-danger text-white fs-15">
+                                        Not Available
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                        </Col>
+                        {
+                          product?.availability ? (
+                            <Col lg={3} sm={6}>
+                            <div className="p-2 border border-dashed rounded">
+                              <div className="d-flex align-items-center">
+                                <div className="avatar-sm me-2">
+                                  <div className="avatar-title rounded bg-transparent text-success fs-24">
+                                    <i className="ri-stack-fill"></i>
+                                  </div>
+                                </div>
+                                <div className="flex-grow-1">
+                                  <p className="text-muted mb-1">Quantity :</p>
+                                  <h5 className="mb-0">{product.quantity}</h5>
+                                </div>
+                              </div>
+                            </div>
+                        </Col>
+                          ) : (
+                            <div></div>
+                          )
+                        }
+                        
                       </Row>
 
                       <Row>
@@ -305,7 +302,7 @@ function EcommerceProductDetail(props:any) {
                           <div className=" mt-4">
                             <h5 className="fs-15">Sizes :</h5>
                             <div className="d-flex flex-wrap gap-2">
-                              <Tooltip
+                              {/*<Tooltip
                                 placement="top"
                                 isOpen={ssize}
                                 target="TooltipSSize"
@@ -344,186 +341,68 @@ function EcommerceProductDetail(props:any) {
                                 }}
                               >
                                 Out of Stock
-                              </Tooltip>
+                              </Tooltip>*/}
+                                {Array.isArray(product?.attributs) && product.attributs.length > 0 ? (
+                                  product.attributs.map((attribute: any) => (
+                                    <div>
+                                      <Tooltip
+                                        placement="top"
+                                        isOpen={ssize}
+                                        target="TooltipSSize"
+                                        toggle={() => {
+                                          setssize(!ssize);
+                                        }}
+                                      >
+                                        {attribute?.name}
+                                      </Tooltip>
+                                    <Input
+                                    type="radio"
+                                    className="btn-check"
+                                    name="productsize-radio"
+                                  />
+                                  <Label
+                                    className="btn btn-soft-primary avatar-sm rounded-circle p-0 d-flex justify-content-center align-items-center "
+                                    id="TooltipSSize"
+                                  >
+                                    {attribute?.name}
+                                  </Label>
+                                  </div>
+                                  ))
+                                ) : (
+                                  <tr>
+                                    <td colSpan={2}>No attributes available</td>
+                                  </tr>
+                                )}
+{
+                          product?.availability ? (
+                            <div>
+                              
+                            </div>
+                          ) : (
+                            <div></div>
+                          )
+                        }
 
-                              <Input
-                                type="radio"
-                                className="btn-check"
-                                name="productsize-radio"
-                              />
-                              <Label
-                                className="btn btn-soft-primary avatar-xs rounded-circle p-0 d-flex justify-content-center align-items-center"
-                                id="TooltipSSize"
-                              >
-                                S
-                              </Label>
 
-                              <Input
-                                type="radio"
-                                className="btn-check"
-                                name="productsize-radio"
-                              />
-                              <Label
-                                className="btn btn-soft-primary avatar-xs rounded-circle p-0 d-flex justify-content-center align-items-center"
-                                id="TooltipMSize"
-                              >
-                                M
-                              </Label>
+                              
 
-                              <Input
-                                type="radio"
-                                className="btn-check"
-                                name="productsize-radio"
-                              />
-                              <Label
-                                className="btn btn-soft-primary avatar-xs rounded-circle p-0 d-flex justify-content-center align-items-center"
-                                id="TooltipLSize"
-                              >
-                                L
-                              </Label>
-
-                              <Input
-                                type="radio"
-                                className="btn-check"
-                                name="productsize-radio"
-                              />
-                              <Label
-                                className="btn btn-soft-primary avatar-xs rounded-circle p-0 d-flex justify-content-center align-items-center"
-                                id="TooltipXlSize"
-                              >
-                                XL
-                              </Label>
+                              
                             </div>
                           </div>
                         </Col>
 
-                        <Col xl={6}>
-                          <div className=" mt-4">
-                            <h5 className="fs-15">Colors :</h5>
-                            <div className="d-flex flex-wrap gap-2">
-                              <div
-                                data-bs-toggle="tooltip"
-                                data-bs-trigger="hover"
-                                data-bs-placement="top"
-                                title="Out of Stock"
-                              >
-                                <button
-                                  type="button"
-                                  className="btn avatar-xs p-0 d-flex align-items-center justify-content-center border rounded-circle fs-20 text-primary"
-                                  disabled
-                                >
-                                  <i className="ri-checkbox-blank-circle-fill"></i>
-                                </button>
-                              </div>
-                              <div
-                                data-bs-toggle="tooltip"
-                                data-bs-trigger="hover"
-                                data-bs-placement="top"
-                                title="03 Items Available"
-                              >
-                                <button
-                                  type="button"
-                                  className="btn avatar-xs p-0 d-flex align-items-center justify-content-center border rounded-circle fs-20 text-secondary"
-                                >
-                                  <i className="ri-checkbox-blank-circle-fill"></i>
-                                </button>
-                              </div>
-                              <div
-                                data-bs-toggle="tooltip"
-                                data-bs-trigger="hover"
-                                data-bs-placement="top"
-                                title="03 Items Available"
-                              >
-                                <button
-                                  type="button"
-                                  className="btn avatar-xs p-0 d-flex align-items-center justify-content-center border rounded-circle fs-20 text-success"
-                                >
-                                  <i className="ri-checkbox-blank-circle-fill"></i>
-                                </button>
-                              </div>
-                              <div
-                                data-bs-toggle="tooltip"
-                                data-bs-trigger="hover"
-                                data-bs-placement="top"
-                                title="02 Items Available"
-                              >
-                                <button
-                                  type="button"
-                                  className="btn avatar-xs p-0 d-flex align-items-center justify-content-center border rounded-circle fs-20 text-info"
-                                >
-                                  <i className="ri-checkbox-blank-circle-fill"></i>
-                                </button>
-                              </div>
-                              <div
-                                data-bs-toggle="tooltip"
-                                data-bs-trigger="hover"
-                                data-bs-placement="top"
-                                title="01 Items Available"
-                              >
-                                <button
-                                  type="button"
-                                  className="btn avatar-xs p-0 d-flex align-items-center justify-content-center border rounded-circle fs-20 text-warning"
-                                >
-                                  <i className="ri-checkbox-blank-circle-fill"></i>
-                                </button>
-                              </div>
-                              <div
-                                data-bs-toggle="tooltip"
-                                data-bs-trigger="hover"
-                                data-bs-placement="top"
-                                title="04 Items Available"
-                              >
-                                <button
-                                  type="button"
-                                  className="btn avatar-xs p-0 d-flex align-items-center justify-content-center border rounded-circle fs-20 text-danger"
-                                >
-                                  <i className="ri-checkbox-blank-circle-fill"></i>
-                                </button>
-                              </div>
-                              <div
-                                data-bs-toggle="tooltip"
-                                data-bs-trigger="hover"
-                                data-bs-placement="top"
-                                title="03 Items Available"
-                              >
-                                <button
-                                  type="button"
-                                  className="btn avatar-xs p-0 d-flex align-items-center justify-content-center border rounded-circle fs-20 text-light"
-                                >
-                                  <i className="ri-checkbox-blank-circle-fill"></i>
-                                </button>
-                              </div>
-                              <div
-                                data-bs-toggle="tooltip"
-                                data-bs-trigger="hover"
-                                data-bs-placement="top"
-                                title="04 Items Available"
-                              >
-                                <button
-                                  type="button"
-                                  className="btn avatar-xs p-0 d-flex align-items-center justify-content-center border rounded-circle fs-20 text-body"
-                                >
-                                  <i className="ri-checkbox-blank-circle-fill"></i>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </Col>
+                        
                       </Row>
 
                       <div className="mt-4 text-muted">
                         <h5 className="fs-15">Description :</h5>
                         <p>
-                          Tommy Hilfiger men striped pink sweatshirt. Crafted
-                          with cotton. Material composition is 100% organic
-                          cotton. This is one of the world’s leading designer
-                          lifestyle brands and is internationally recognized for
-                          celebrating the essence of classic American cool
-                          style, featuring preppy with a twist designs.
+                        {product && product.description ? product.description : "No description availabe"}
                         </p>
                       </div>
-
+                      {/*
                       <Row>
+                        
                         <Col sm={6}>
                           <div className="mt-3">
                             <h5 className="fs-15">Features :</h5>
@@ -559,6 +438,7 @@ function EcommerceProductDetail(props:any) {
                           </div>
                         </Col>
                       </Row>
+                      */}
 
                       <div className="product-content mt-5">
                         <h5 className="fs-15 mb-3">Product Description :</h5>
@@ -601,32 +481,24 @@ function EcommerceProductDetail(props:any) {
                             tabId="1"
                           >
                             <div className="table-responsive">
-                              <table className="table mb-0">
-                                <tbody>
+                            <table className="table mb-0">
+                              <tbody>
+                                {Array.isArray(product?.attributs) && product.attributs.length > 0 ? (
+                                  product.attributs.map((attribute: any, index: number) => (
+                                    <tr key={index}>
+                                      <th scope="row" style={{ width: "200px" }}>
+                                        {attribute?.name}
+                                      </th>
+                                      <td>{attribute?.description}</td>
+                                    </tr>
+                                  ))
+                                ) : (
                                   <tr>
-                                    <th scope="row" style={{ width: "200px" }}>
-                                      Category
-                                    </th>
-                                    <td>T-Shirt</td>
+                                    <td colSpan={2}>No attributes available</td>
                                   </tr>
-                                  <tr>
-                                    <th scope="row">Brand</th>
-                                    <td>Tommy Hilfiger</td>
-                                  </tr>
-                                  <tr>
-                                    <th scope="row">Color</th>
-                                    <td>Blue</td>
-                                  </tr>
-                                  <tr>
-                                    <th scope="row">Material</th>
-                                    <td>Cotton</td>
-                                  </tr>
-                                  <tr>
-                                    <th scope="row">Weight</th>
-                                    <td>140 Gram</td>
-                                  </tr>
-                                </tbody>
-                              </table>
+                                )}
+                              </tbody>
+                            </table>
                             </div>
                           </TabPane>
                           <TabPane
@@ -635,18 +507,12 @@ function EcommerceProductDetail(props:any) {
                           >
                             <div>
                               <h5 className="mb-3">
-                                Tommy Hilfiger Sweatshirt for Men (Pink)
+                                {product && product.name ? product.name : "Product Name not availabe"} 
                               </h5>
                               <p>
-                                Tommy Hilfiger men striped pink sweatshirt.
-                                Crafted with cotton. Material composition is
-                                100% organic cotton. This is one of the world’s
-                                leading designer lifestyle brands and is
-                                internationally recognized for celebrating the
-                                essence of classic American cool style,
-                                featuring preppy with a twist designs.
+                              {product && product.description ? product.description : "Product Description not availabe"} 
                               </p>
-                              <div>
+                              {/*<div>
                                 <p className="mb-2">
                                   <i className="mdi mdi-circle-medium me-1 text-muted align-middle"></i>{" "}
                                   Machine Wash
@@ -663,7 +529,7 @@ function EcommerceProductDetail(props:any) {
                                   <i className="mdi mdi-circle-medium me-1 text-muted align-middle"></i>{" "}
                                   Long sleeve
                                 </p>
-                              </div>
+                              </div>*/}
                             </div>
                           </TabPane>
                         </TabContent>

@@ -114,6 +114,8 @@ interface TableContainerProps {
   handleCompanyClick?: any;
   handleContactClick?: any;
   handleTicketClick?: any;
+  
+  isCustomTable? : boolean ;
 }
 
 const TableContainer = ({

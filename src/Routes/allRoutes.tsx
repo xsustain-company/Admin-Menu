@@ -254,7 +254,7 @@ const authProtectedRoutes = [
   { path: "/viewCompany", component: <ViewCompany /> },// done +-
   { path: "/editCompany", component: <EditCompany /> },// done +-
 
-  //still not 
+  //still not
   { path: "/createProduct", component: <CreateProduct /> },
   { path: "/allProducts", component: <AllProducts /> },
   { path: "/UpdateProduct", component: <UpdateProduct /> },

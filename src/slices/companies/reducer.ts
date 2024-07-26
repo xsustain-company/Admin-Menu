@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getCompaniess, getOneCompany , addCategories, getCategoriess, getSubCategoriess, getAttributs, getProductss, getOneProductss } from './thunk';
+import { getCompaniess, getOneCompany , addCategories, getCategoriess, getSubCategoriess, getAttributs, getProductss, getOneProductss, getOneProduct } from './thunk';
 import { categories } from "common/data/jobLanding";
 export const initialState :any= {
   companies:[],
@@ -94,7 +94,7 @@ const CompaniesSlice = createSlice({
     builder.addCase(getProductss.rejected, (state:any, action:any) => {
       state.error = action.payload.error || null;
     });
-    builder.addCase(getOneProductss.fulfilled, (state:any, action:any) => {
+    builder.addCase(getOneProduct.fulfilled, (state:any, action:any) => {
       console.log(action.payload);
       
       state.oneProduct = action.payload.data; 

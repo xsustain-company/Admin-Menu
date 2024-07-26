@@ -21,7 +21,9 @@ import {
   getCompanies,
   addProductApi,
   deleteCompanieAPI,
-  updateCompany1
+  updateCompany1,
+  deleteCategoryAPI,
+  updateSubCategoryApi
 } from "../../helpers/fakebackend_helper";
 
 export const getProducts = createAsyncThunk("ecommerce/getProducts", async () => {
@@ -101,9 +103,35 @@ export const deleteCompanie = createAsyncThunk("ecommerce/deleteCompanie", async
   }
 });
 
+export const deleteCategory = createAsyncThunk("ecommerce/deleteCategory", async (product:any) => {
+  try {
+    const response = deleteCategoryAPI(product);
+    toast.success("Category Deleted Successfully", { autoClose: 3000 });
+    return { product, ...response };
+  } catch (error) {
+    toast.error("Category Delete Failed", { autoClose: 3000 });
+    return error;
+  }
+});
 
 
 
+export const updateSubCategory = createAsyncThunk(
+  "ecommerce/updateSubCategory",
+  async ({ SubCat, id }: { SubCat: any; id: any }) => {
+    try {
+      const response = updateSubCategoryApi(SubCat, id);
+      const data = await response;
+      console.log("Data lahnai : " , data);
+      
+      toast.success("SubCat Updated Successfully", { autoClose: 3000 });
+      return data;
+    } catch (error) {
+      toast.error("SubCat Update Failed", { autoClose: 3000 });
+      return error;
+    }
+  }
+);
 
 export const updateOrder = createAsyncThunk("ecommerce/updateOrder", async (order:any) => {
   try {

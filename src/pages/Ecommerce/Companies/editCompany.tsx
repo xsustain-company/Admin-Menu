@@ -299,7 +299,7 @@ const EditCompany = (props: any) => {
       // Dispatch the update action
       dispatch(updateCompanies1(data))
         .then(() => {
-          history("/apps-ecommerce-orders");
+          history("/companies");
           validation.resetForm();
         })
         .catch((error: any) => {

@@ -9,6 +9,7 @@ export const ADD_ATTRIBUT = "/attributs/create";
 export const GET_ATTRIBUTS = "/attributs/listAll";
 export const DELETE_COMPANY = "/company/delete";
 
+export const DELETE_CATEGORY = "/category/delete";
 
 export const GET_COMPANIES = "/company/listAll";
 export const GET_PRODUCTSS = "/product/listAll";
@@ -22,6 +23,12 @@ export const GET_SUBCATEGORIES = "/subcategory/listAll";
 export const GET_COMPANY = "/company/getOne"
 export const ADD_CATEGORY = "/category/create";
 export const ADD_SUBCATEGORY = "/subcategory/create";
+
+
+export const UPDATE_SUBCATEGORY = "/subcategory/update";
+
+
+
 
 
 //

@@ -51,7 +51,6 @@ const AllCompanies = () => {
   }, [dispatch, companies]);
   const onClickDelete = () => {
     dispatch(deleteCompanie(company._id));
-
     setDeleteModal(false);
   };
 
@@ -181,16 +180,16 @@ const AllCompanies = () => {
             <ul className="list-inline hstack gap-2 mb-0">
               <li className="list-inline-item">
                 <Link
-to={`/viewCompany?id=${cellProps.row.original._id}`}
-className="text-primary d-inline-block"
+                  to={`/viewCompany?id=${cellProps.row.original._id}`}
+                  className="text-primary d-inline-block"
                 >
                   <i className="ri-eye-fill fs-16"></i>
                 </Link>
               </li>
               <li className="list-inline-item edit">
                 <Link
-to={`/editCompany?id=${cellProps.row.original._id}`}
-className="text-primary d-inline-block edit-item-btn"
+                  to={`/editCompany?id=${cellProps.row.original._id}`}
+                  className="text-primary d-inline-block edit-item-btn"
                   onClick={() => {
                     const orderData = cellProps.row.original;
                     //handleOrderClick(orderData);
