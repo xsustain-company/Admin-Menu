@@ -58,6 +58,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { createSelector } from "reselect";
 import moment from "moment";
+import { categories } from "common/data/jobLanding";
 
 
 const EcommerceOrders = () => {
@@ -136,8 +137,9 @@ const EcommerceOrders = () => {
   ])
   const onClickDelete = (order: any) => {
     
-    setDeleteModal(true);
+    
     dispatch(deleteCategory(order._id));
+    dispatch(getCategoriess());
   };
   const onClickDeleteSubCat = (order: any) => {
     
@@ -170,6 +172,10 @@ const EcommerceOrders = () => {
     if (!isEmpty(companies)) setCompaniesList(companies);
   }, [companies]);
   
+
+  console.log("Categooriieeess ******* : " , companies);
+  
+
   const toggleTab = (tab: any, type: any) => {
     if (activeTab !== tab) {
       setActiveTab(tab);
@@ -188,6 +194,16 @@ const EcommerceOrders = () => {
     console.log(data);
     setFormatedOptions(data);
   }, [subCategoriess]);
+  
+
+  useEffect(() => {
+    let data = companies.map((item: any) => ({
+      value: item._id,
+      label: item.name,
+    }));
+    console.log(data);
+    setCategoryOptions(data);
+  }, [companies]);
   
   // validation
   const validation: any = useFormik({
@@ -240,33 +256,33 @@ const EcommerceOrders = () => {
         dispatch(updateSubCategory({ SubCat: data, id: ID }));
         setModalSubCat(false);
         dispatch(getSubCategoriess());
+        setIsEditSubCat(false);
         
         return;
       }
+
       if (isEdit) {
-        const updateOrder = {
-          id: order ? order.id : 0,
-          orderId: values.orderId,
-          customer: values.customer,
-          product: values.product,
-          orderDate: values.orderDate,
-          amount: values.amount,
-          payment: values.payment,
-          status: values.status
+        const updateData = {
+          name: values["name"],
+          subcategory :subCategoriesToEdit,
         };
-        // update order
-        dispatch(onUpdateOrder(updateOrder));
+        console.log("choofe : ", updateData);
+        dispatch(onUpdateOrder(updateData ));
+        dispatch(getCategoriess());
+        setIsEdit(false);
         validation.resetForm();
+        setModal(false);
+        return;
       } else {
         console.log(subCategoriesToAdd);
         
         const newCategory = {
-          subCategories : subCategoriesToAdd,
+          subcategory : subCategoriesToAdd,
           name: values["name"],
          
         };
         try{
-          console.log("***********----",newCategory);
+          console.log("****NEW CATEGORY*******----",newCategory);
           
          dispatch(addCategory(newCategory));
 
@@ -298,7 +314,12 @@ const EcommerceOrders = () => {
 
 
   const [selectedMulti3, setselectedMulti3] = useState<any>(null);
+  const [selectedMulti4, setselectedMulti4] = useState<any>(null);
+  const [selectedMulti5, setselectedMulti5] = useState<any>(null);
+  
   const[subCategoriesToAdd,setSubCategoriesToAdd]= useState<any>(null);
+  const[subCategoriesToEdit,setSubCategoriesToEdit]= useState<any>(null);
+  const[categoriesToAdd,setCategoriesToAdd]= useState<any>(null);
   function handleMulti3(selectedMulti3: any) {
     const ids = selectedMulti3.map((item: any) => item.value);
 
@@ -306,6 +327,26 @@ const EcommerceOrders = () => {
     setSubCategoriesToAdd(ids);
       
     setselectedMulti3(selectedMulti3);
+  }
+
+
+  function handleMulti5(selectedMulti5: any) {
+    const ids = selectedMulti5.map((item: any) => item.value);
+
+    // Set the IDs to the state
+    setSubCategoriesToEdit(ids);
+      
+    setselectedMulti5(selectedMulti5);
+  }
+
+
+  function handleMulti4(selectedMulti4: any) {
+    const ids = selectedMulti4.map((item: any) => item.value);
+
+    // Set the IDs to the state
+    setCategoriesToAdd(ids);
+      
+    setselectedMulti4(selectedMulti4);
   }
 
   const toggleView = useCallback(() => {
@@ -355,6 +396,7 @@ const EcommerceOrders = () => {
         id: order.id,
         orderId: order.orderId,
         customer: order.customer,
+        subcategory : order.subcategory,
         product: order.product,
         orderDate: order.orderDate,
         ordertime: order.ordertime,
@@ -363,6 +405,8 @@ const EcommerceOrders = () => {
         status: order.status,
         // Other category details if needed
       });
+      console.log("Orderrr : ",order);
+      
       setIsEdit(true);
       toggle();
     } else if (type === "subcategory") {
@@ -380,18 +424,33 @@ const EcommerceOrders = () => {
   
   const handleEditSubClick = useCallback((arg: any, type: string) => {
     const order = arg;
-   
+    setOrder({
+      id: order._id,
+      name: order.name,
+    });
+    setIsEditSubCat(true);
+    toggleSubCatModal(); 
+
+    /*
+    if (type ==="subcategory"){
       setOrder({
         id: order._id,
         name: order.name,
       });
       setIsEditSubCat(true);
       toggleSubCatModal(); 
-    
-  }, [toggleSubCatModal, setOrder, setIsEditSubCat]); // Ensure dependencies are correctly included
-  
-  
-
+    }
+    else{
+      setOrder({
+        id: order._id,
+        name: order.name,
+        subcategory : order.subCategory,
+      });
+      setIsEditCat(true);
+      toggleCatModal(); 
+    }
+    */
+  }, [toggleSubCatModal, setOrder, setIsEditSubCat]); 
 
 
 
@@ -401,7 +460,13 @@ const EcommerceOrders = () => {
     useEffect(()=>{console.log(formatedOptions);
     },[formatedOptions])
   
-  const handleViewCategorie = useCallback((arg: any) => {
+  
+    const [categoryOptions,setCategoryOptions] = useState([])
+    useEffect(()=>{console.log(categoryOptions);
+    },[categoryOptions])
+  
+  
+    const handleViewCategorie = useCallback((arg: any) => {
     console.log(arg);
     setModalView(true)
 
@@ -410,7 +475,7 @@ const EcommerceOrders = () => {
       id:category._id,
       subcategory : category.subcategory,
       name: category.name,
-      subCategories: category.subcategory,
+      //subCategories: category.subcategory,
       createdAt: category.createdAt,
     });
     
@@ -509,6 +574,7 @@ const EcommerceOrders = () => {
             <ul className="list-inline hstack gap-2 mb-0">
               {isSubCategoriesTab ? (
                 <>
+                {/*
                   <li className="list-inline-item">
                     <Link
                       to="#"
@@ -518,6 +584,7 @@ const EcommerceOrders = () => {
                       <i className="ri-eye-fill fs-16"></i>
                     </Link>
                   </li>
+                  */}
                   <li className="list-inline-item edit">
                     <Link
                       to="#"
@@ -739,9 +806,6 @@ const EcommerceOrders = () => {
                   }}>
                     <ModalBody>
                       <input type="hidden" id="id-field" />
-
-               
-
                       <div className="mb-3">
                         <Label
                           htmlFor="customername-field"
@@ -836,9 +900,11 @@ const EcommerceOrders = () => {
                         value={validation.values.name || ""}
                         invalid={validation.touched.name && validation.errors.name ? true : false}
                       />
+                     
                       {validation.touched.name && validation.errors.name && (
                         <FormFeedback type="invalid">{validation.errors.name}</FormFeedback>
                       )}
+                       
                       {/* Additional form elements if needed */}
                     </ModalBody>
                     <div className="modal-footer">
@@ -855,7 +921,7 @@ const EcommerceOrders = () => {
 
                 <Modal id="showModal" isOpen={modalAddSubCategorie} toggle={toggleAddSubCategorie} centered>
                   <ModalHeader className="bg-light p-3" toggle={toggleAddSubCategorie}>
-                    {isEdit ? "Edit Order" : "Add Sub Category"}
+                    {isEdit ? "Edit Category" : "Add Sub Category"}
                   </ModalHeader>
                   <Form className="tablelist-form" onSubmit={(e: any) => {
                     e.preventDefault();
@@ -876,6 +942,7 @@ const EcommerceOrders = () => {
                         value={validation.values.name || ""}
                         invalid={validation.touched.name && validation.errors.name ? true : false}
                       />
+                      
                       {validation.touched.name && validation.errors.name && (
                         <FormFeedback type="invalid">{validation.errors.name}</FormFeedback>
                       )}
