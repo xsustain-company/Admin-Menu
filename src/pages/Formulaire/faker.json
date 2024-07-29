@@ -1,0 +1,96 @@
+[
+    
+        {
+          "type": "text",
+          "text": "What is your name?"
+        },
+        {
+          "type": "select",
+          "text": "What is your favorite color?",
+          "options": [
+            { "value": "red", "text": "Red" },
+            { "value": "blue", "text": "Blue" },
+            { "value": "green", "text": "Green" }
+          ]
+        },
+        {
+          "type": "radio",
+          "text": "What is your gender?",
+          "options": [
+            { "value": "male", "text": "Male" },
+            { "value": "female", "text": "Female" }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "text": "Select your hobbies",
+          "options": [
+            { "value": "reading", "text": "Reading" },
+            { "value": "sports", "text": "Sports" },
+            { "value": "music", "text": "Music" }
+          ]
+        },
+        {
+            "type": "text",
+            "text": "What is your email?"
+        },
+        {
+            "type": "select",
+            "text": "What is your favorite fruit?",
+            "options": [
+              { "value": "apple", "text": "Apple" },
+              { "value": "banana", "text": "Banana" },
+              { "value": "orange", "text": "Orange" }
+            ]
+          },
+          {
+            "type": "select",
+            "text": "What is your favorite fruit?",
+            "options": [
+              { "value": "apple", "text": "Apple" },
+              { "value": "banana", "text": "Banana" },
+              { "value": "orange", "text": "Orange" }
+            ]
+          },
+          {
+            "type": "radio",
+            "text": "What is your age group?",
+            "options": [
+              { "value": "18-25", "text": "18-25" },
+              { "value": "26-35", "text": "26-35" },
+              { "value": "36-45", "text": "36-45" }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "What is your favorite animal?"
+          },
+          {
+            "type": "select",
+            "text": "What is your preferred mode of transport?",
+            "options": [
+              { "value": "car", "text": "Car" },
+              { "value": "bike", "text": "Bike" },
+              { "value": "public", "text": "Public Transport" }
+            ]
+          },
+          {
+            "type": "radio",
+            "text": "Do you own a car?",
+            "options": [
+              { "value": "yes", "text": "Yes" },
+              { "value": "no", "text": "No" }
+            ]
+          },
+          {
+            "type": "checkbox",
+            "text": "Select your preferred workout activities",
+            "options": [
+              { "value": "running", "text": "Running" },
+              { "value": "yoga", "text": "Yoga" },
+              { "value": "gym", "text": "Gym" }
+            ]
+          }
+      
+    
+   ]

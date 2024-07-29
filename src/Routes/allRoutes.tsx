@@ -246,6 +246,7 @@ import AllProducts from "pages/Ecommerce/Products";
 import UpdateProduct from "pages/Ecommerce/Products/updateProduct";
 import ViewCompany from "pages/Ecommerce/Companies/viewCompany";
 import EditCompany from "pages/Ecommerce/Companies/editCompany";
+import FormuliareList from "pages/Formulaire/FormulaireList";
 
 const authProtectedRoutes = [  
   // refactored
@@ -257,9 +258,13 @@ const authProtectedRoutes = [
   //still not 
   { path: "/createProduct", component: <CreateProduct /> },
   { path: "/allProducts", component: <AllProducts /> },
-  { path: "/UpdateProduct", component: <UpdateProduct /> },
-
   
+  { path: "/UpdateProduct", component: <UpdateProduct /> },
+  //Create Forms 
+  
+  { path: "/FormuliareList", component: <FormuliareList /> },
+
+  //
   { path: "/attributsManagement", component: <AttributsManagement /> },
                                                  
   { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
